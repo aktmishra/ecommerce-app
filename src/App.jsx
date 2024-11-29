@@ -10,10 +10,10 @@ function App() {
 
   return (
     <>
-      <div className="card">
+      <div className="flex flex-col gap-5 items-center ">
         <p>{count}</p>
-        <button onClick={() => dispatch(increment())}>Increment</button>
-        <button onClick={() => dispatch(decrement())}>decrement</button>
+        <div className="flex gap-5 "><button onClick={() => dispatch(increment())}>Increment</button>
+        <button onClick={() => dispatch(decrement())}>decrement</button></div>
       </div>
     </>
   );
