@@ -1,22 +1,19 @@
 import "./App.css";
-import { useSelector, useDispatch } from "react-redux";
-import { increment, selectCount } from "./features/counter/counterSlice";
+// import { useSelector, useDispatch } from "react-redux";
+// import { increment, selectCount } from "./features/counter/counterSlice";
+import ProductList from "./features/product-list/ProductList"
 
 function App() {
-  const count = useSelector(selectCount);
-  const dispatch = useDispatch();
+  // const count = useSelector(selectCount);
+  // const dispatch = useDispatch();
 
   return (
-    <>
-      <div className="flex flex-col gap-5 items-center ">
-        <p>{count}</p>
-        <div className="flex gap-5 ">
-          <button onClick={() => dispatch(increment())}>Increment</button>
-         
-        </div>
+    
+      <div className=" ">
+       <ProductList></ProductList>
       </div>
-    </>
-  );
+    
+  )
 }
 
 export default App;
