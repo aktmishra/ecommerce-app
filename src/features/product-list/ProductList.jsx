@@ -48,7 +48,7 @@ const filters = [
     id: "category",
     name: "Category",
     options: [
-      { value: "new-arrivals", label: "New Arrivals", checked: false },
+      { value: "new-arrivals", label: "All Products", checked: false },
       { value: "sale", label: "Sale", checked: false },
       { value: "travel", label: "Travel", checked: true },
       { value: "organization", label: "Organization", checked: false },
@@ -243,9 +243,9 @@ export default function ProductList() {
           </Dialog>
 
           <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="flex items-baseline justify-between border-b border-gray-200 pb-6 pt-24">
+            <div className="flex items-baseline justify-between border-b border-gray-200 pb-6 pt-14">
               <h1 className="text-4xl font-bold tracking-tight text-gray-900">
-                New Arrivals
+                All Products
               </h1>
 
               <div className="flex items-center">

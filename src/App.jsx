@@ -1,22 +1,16 @@
 import "./App.css";
- 
- 
+import React from "react";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
-import Home from "./pages/Home";
-import  React from "react";
-import { createRoot } from "react-dom/client";
-import {
-  createBrowserRouter,
-  RouterProvider,
-   
-} from "react-router-dom";
 import SignupPage from "./pages/SignupPage";
 import LoginPage from "./pages/LoginPage";
+import CartPage from "./pages/CartPage";
+import Home from "./pages/Home";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Home></Home>
+    element: <Home></Home>,
   },
 
   {
@@ -26,21 +20,19 @@ const router = createBrowserRouter([
   {
     path: "/login",
     element: <LoginPage></LoginPage>,
-  }
+  },
+  {
+    path: "/cart",
+    element: <CartPage></CartPage>
+  },
 ]);
 
-
-
 function App() {
- 
-
   return (
-    
-      <div className="App">
-        <RouterProvider router={router} />
-      </div>
-    
-  )
+    <div className="App">
+      <RouterProvider router={router} />
+    </div>
+  );
 }
 
 export default App;
