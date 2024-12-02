@@ -1,17 +1,43 @@
 import "./App.css";
-// import { useSelector, useDispatch } from "react-redux";
-// import { increment, selectCount } from "./features/counter/counterSlice";
-import ProductList from "./features/product-list/ProductList"
+ 
+ 
+
 import Home from "./pages/Home";
+import  React from "react";
+import { createRoot } from "react-dom/client";
+import {
+  createBrowserRouter,
+  RouterProvider,
+   
+} from "react-router-dom";
+import SignupPage from "./pages/SignupPage";
+import LoginPage from "./pages/LoginPage";
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Home></Home>
+  },
+
+  {
+    path: "/signup",
+    element: <SignupPage></SignupPage>,
+  },
+  {
+    path: "/login",
+    element: <LoginPage></LoginPage>,
+  }
+]);
+
+
 
 function App() {
-  // const count = useSelector(selectCount);
-  // const dispatch = useDispatch();
+ 
 
   return (
     
-      <div className=" ">
-        <Home></Home>
+      <div className="App">
+        <RouterProvider router={router} />
       </div>
     
   )
