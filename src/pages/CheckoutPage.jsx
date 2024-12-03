@@ -28,7 +28,7 @@ const products = [
       "Front of satchel with blue canvas body, black straps and handle, drawstring top, and front zipper pouch.",
   },
   {
-    id: 2,
+    id: 3,
     name: "Medium Stuff Satchel",
     href: "#",
     color: "Blue",
@@ -72,6 +72,7 @@ function CheckoutPage() {
         <div className="  lg:col-span-3 ">
           <form className="px-8 py-5 my-12 bg-white">
             <div>
+              {/* Personal Info */}
               <div className="border-b border-gray-900/10 pb-12">
                 <h2 className="text-2xl font-bold tracking-tight text-gray-900">
                   Personal Information
@@ -250,6 +251,7 @@ function CheckoutPage() {
                   </div>
                 </div>
               </div>
+              {/* button */}
               <div className="mt-6 flex items-center justify-end gap-x-6">
                 <button
                   type="button"
@@ -264,7 +266,7 @@ function CheckoutPage() {
                   Add Address
                 </button>
               </div>
-
+              {/* Saved Addresses  */}
               <div className="border-b border-gray-900/10 pb-12">
                 <div className="space-y-5">
                   <fieldset>
@@ -329,7 +331,7 @@ function CheckoutPage() {
                   </fieldset>
                 </div>
               </div>
-
+              {/* Payment Mode */}
               <div className="border-b border-gray-900/10 pb-12">
                 <div className="mt-8 space-y-10">
                   <fieldset>
