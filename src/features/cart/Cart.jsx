@@ -48,10 +48,11 @@ export default function Cart() {
 
   return (
     <div className="mt-8 mx-auto max-w-[80%] px-4 sm:px-6 lg:px-20 bg-white">
- 
-      <h1 className=" text-4xl font-bold tracking-tight text-gray-900">
-        Shopping Cart
-      </h1>
+      <div className="pt-12">
+        <h1 className=" text-4xl font-bold tracking-tight text-gray-900">
+          Shopping Cart
+        </h1>
+      </div>
       <div className="mt-8 px-4 ">
         <div className="flow-root">
           <ul
@@ -88,7 +89,11 @@ export default function Cart() {
                       >
                         Qty.
                       </label>
-                      <select name="" id="Qty" className="border-gray-200 border-2">
+                      <select
+                        name=""
+                        id="Qty"
+                        className="border-gray-200 border-2"
+                      >
                         <option value="1">1</option>
                         <option value="2">2</option>
                         <option value="3">3</option>
@@ -133,7 +138,6 @@ export default function Cart() {
             <Link to="/">
               <button
                 type="button"
-                onClick={() => setOpen(false)}
                 className="font-medium text-indigo-600 hover:text-indigo-500"
               >
                 Continue Shopping
