@@ -22,7 +22,11 @@ import {
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router";
-import { selectAllProducts, fetchAllProductsAsync } from "../productSlice";
+import {
+  selectAllProducts,
+  fetchAllProductsAsync,
+  fetchProductsByFiltersAsync,
+} from "../productSlice";
 
 const sortOptions = [
   { name: "Most Popular", href: "#", current: true },
@@ -34,42 +38,85 @@ const sortOptions = [
 
 const filters = [
   {
-    id: "color",
-    name: "Color",
+    id: "brand",
+    name: "Brand",
     options: [
-      { value: "white", label: "White", checked: false },
-      { value: "beige", label: "Beige", checked: false },
-      { value: "blue", label: "Blue", checked: true },
-      { value: "brown", label: "Brown", checked: false },
-      { value: "green", label: "Green", checked: false },
-      { value: "purple", label: "Purple", checked: false },
+      { value: "Essence", label: "Essence", checked: false },
+      { value: "Glamour Beauty", label: "Glamour Beauty", checked: false },
+      { value: "Velvet Touch", label: "Velvet Touch", checked: false },
+      { value: "Chic Cosmetics", label: "Chic Cosmetics", checked: false },
+      { value: "Nail Couture", label: "Nail Couture", checked: false },
+      { value: "Calvin Klein", label: "Calvin Klein", checked: false },
+      { value: "Chanel", label: "Chanel", checked: false },
+      { value: "Dior", label: "Dior", checked: false },
+      {
+        value: "Dolce & Gabbana",
+        label: "Dolce & Gabbana",
+        checked: false,
+      },
+      { value: "Gucci", label: "Gucci", checked: false },
+      {
+        value: "Annibale Colombo",
+        label: "Annibale Colombo",
+        checked: false,
+      },
+      { value: "Furniture Co.", label: "Furniture Co.", checked: false },
+      { value: "Knoll", label: "Knoll", checked: false },
+      { value: "Bath Trends", label: "Bath Trends", checked: false },
+      { value: undefined, label: undefined, checked: false },
+      { value: "Apple", label: "Apple", checked: false },
+      { value: "Asus", label: "Asus", checked: false },
+      { value: "Huawei", label: "Huawei", checked: false },
+      { value: "Lenovo", label: "Lenovo", checked: false },
+      { value: "Dell", label: "Dell", checked: false },
+      { value: "Fashion Trends", label: "Fashion Trends", checked: false },
+      { value: "Gigabyte", label: "Gigabyte", checked: false },
+      { value: "Classic Wear", label: "Classic Wear", checked: false },
+      { value: "Casual Comfort", label: "Casual Comfort", checked: false },
+      { value: "Urban Chic", label: "Urban Chic", checked: false },
+      { value: "Nike", label: "Nike", checked: false },
+      { value: "Puma", label: "Puma", checked: false },
+      { value: "Off White", label: "Off White", checked: false },
+      {
+        value: "Fashion Timepieces",
+        label: "Fashion Timepieces",
+        checked: false,
+      },
+      { value: "Longines", label: "Longines", checked: false },
+      { value: "Rolex", label: "Rolex", checked: false },
+      { value: "Amazon", label: "Amazon", checked: false },
     ],
   },
   {
     id: "category",
     name: "Category",
     options: [
-      { value: "new-arrivals", label: "All Products", checked: false },
-      { value: "sale", label: "Sale", checked: false },
-      { value: "travel", label: "Travel", checked: true },
-      { value: "organization", label: "Organization", checked: false },
-      { value: "accessories", label: "Accessories", checked: false },
-    ],
-  },
-  {
-    id: "size",
-    name: "Size",
-    options: [
-      { value: "2l", label: "2L", checked: false },
-      { value: "6l", label: "6L", checked: false },
-      { value: "12l", label: "12L", checked: false },
-      { value: "18l", label: "18L", checked: false },
-      { value: "20l", label: "20L", checked: false },
-      { value: "40l", label: "40L", checked: true },
+      { value: "beauty", label: "beauty", checked: false },
+      { value: "fragrances", label: "fragrances", checked: false },
+      { value: "furniture", label: "furniture", checked: false },
+      { value: "groceries", label: "groceries", checked: false },
+      {
+        value: "home decoration",
+        label: "home decoration",
+        checked: false,
+      },
+      {
+        value: "kitchen accessories",
+        label: "kitchen accessories",
+        checked: false,
+      },
+      { value: "laptops", label: "laptops", checked: false },
+      { value: "mens shirts", label: "mens shirts", checked: false },
+      { value: "mens shoes", label: "mens shoes", checked: false },
+      { value: "mens watches", label: "mens watches", checked: false },
+      {
+        value: "mobile accessories",
+        label: "mobile accessories",
+        checked: false,
+      },
     ],
   },
 ];
- 
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -79,7 +126,17 @@ export default function ProductList() {
   const products = useSelector(selectAllProducts);
   const dispatch = useDispatch();
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
-  useEffect(()=>{dispatch(fetchAllProductsAsync())},[])
+  const [filter, setFilter] = useState({});
+  useEffect(() => {
+    dispatch(fetchAllProductsAsync());
+  }, [dispatch]);
+
+  const handleFilter = (e, section, option) => {
+    const newFilter = { ...filter, [section.id]: option.value };
+    setFilter(newFilter);
+    dispatch(fetchProductsByFiltersAsync(filter));
+    console.log(section.id, option.value);
+  };
 
   return (
     <div>
@@ -151,6 +208,9 @@ export default function ProductList() {
                                     id={`filter-mobile-${section.id}-${optionIdx}`}
                                     name={`${section.id}[]`}
                                     type="checkbox"
+                                    onChange={(e) =>
+                                      handleFilter(e, section, option)
+                                    }
                                     className="col-start-1 row-start-1 appearance-none rounded border border-gray-300 bg-white checked:border-indigo-600 checked:bg-indigo-600 indeterminate:border-indigo-600 indeterminate:bg-indigo-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 forced-colors:appearance-auto"
                                   />
                                   <svg
@@ -296,6 +356,9 @@ export default function ProductList() {
                                     defaultChecked={option.checked}
                                     id={`filter-${section.id}-${optionIdx}`}
                                     name={`${section.id}[]`}
+                                    onChange={(e) =>
+                                      handleFilter(e, section, option)
+                                    }
                                     type="checkbox"
                                     className="col-start-1 row-start-1 appearance-none rounded border border-gray-300 bg-white checked:border-indigo-600 checked:bg-indigo-600 indeterminate:border-indigo-600 indeterminate:bg-indigo-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 forced-colors:appearance-auto"
                                   />
@@ -341,45 +404,52 @@ export default function ProductList() {
                     <div className="mx-auto max-w-2xl px-4 py-0 sm:px-6 sm:py-0 lg:max-w-7xl lg:px-8">
                       <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
                         {products.map((product) => (
-                         <Link to="/product-detail" key={product.id}>
-                           <div  className="group relative min-h-60 border-gray-300 border-2 p-1 rounded-md  ">
-                            <img
-                              alt={product.title}
-                              src={product. thumbnail}
-                              className="aspect-square  w-full rounded-md bg-gray-200 object-cover group-hover:opacity-75 lg:aspect-auto lg:h-80"
-                            />
-                            <div className="mt-4 flex justify-between">
-                              <div>
-                                <h3 className="text-sm text-gray-700">
-                                  <a href={product.thumbnail}>
-                                    <span
-                                      aria-hidden="true"
-                                      className="absolute inset-0"
-                                    />
-                                    {product. title}
+                          <Link to="/product-detail" key={product.id}>
+                            <div className="group relative min-h-60 border-gray-300 border-2 p-1 rounded-md  ">
+                              <img
+                                alt={product.title}
+                                src={product.thumbnail}
+                                className="aspect-square  w-full rounded-md bg-gray-200 object-cover group-hover:opacity-75 lg:aspect-auto lg:h-80"
+                              />
+                              <div className="mt-4 flex justify-between">
+                                <div>
+                                  <h3 className="text-sm text-gray-700">
+                                    <a href={product.thumbnail}>
+                                      <span
+                                        aria-hidden="true"
+                                        className="absolute inset-0"
+                                      />
+                                      {product.title}
+                                    </a>
+                                  </h3>
+                                  <a
+                                    href=""
+                                    className="flex gap-1 items-center"
+                                  >
+                                    <StarIcon className="size-4  text-yellow-400 fill-yellow-400"></StarIcon>
+                                    <span className="text-gray-600 text-sm">
+                                      {product.rating}
+                                    </span>
                                   </a>
-                                </h3>
-                                <a href="" className="flex gap-1 items-center">
-                                  
-                                    <StarIcon className="size-4  text-yellow-400 fill-yellow-400" ></StarIcon>
-                                    <span className="text-gray-600 text-sm">{product.rating}</span>
-                                  </a>
-                                <p className="mt-1 text-sm text-gray-500">
-                                  {product.color}
-                                </p>
-
-                              </div>
-                              <div>
-                              <p className="text-sm font-medium text-gray-900">
-                                ${Math.round(product.price*(1-product.discountPercentage/100))}
-                              </p>
-                              <p className="text-sm line-through font-medium text-gray-600">
-                                ${product.price}
-                              </p>
+                                  <p className="mt-1 text-sm text-gray-500">
+                                    {product.color}
+                                  </p>
+                                </div>
+                                <div>
+                                  <p className="text-sm font-medium text-gray-900">
+                                    $
+                                    {Math.round(
+                                      product.price *
+                                        (1 - product.discountPercentage / 100)
+                                    )}
+                                  </p>
+                                  <p className="text-sm line-through font-medium text-gray-600">
+                                    ${product.price}
+                                  </p>
+                                </div>
                               </div>
                             </div>
-                          </div>
-                         </Link>
+                          </Link>
                         ))}
                       </div>
                     </div>
