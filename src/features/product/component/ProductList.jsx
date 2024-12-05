@@ -133,8 +133,9 @@ export default function ProductList() {
 
   const handleFilter = (e, section, option) => {
     const newFilter = { ...filter, [section.id]: option.value };
+    // setState is async, thts why newFilter is decleared and passed to setFilter()
     setFilter(newFilter);
-    dispatch(fetchProductsByFiltersAsync(filter));
+    dispatch(fetchProductsByFiltersAsync(newFilter));
     console.log(section.id, option.value);
   };
 
@@ -208,7 +209,7 @@ export default function ProductList() {
                                     id={`filter-mobile-${section.id}-${optionIdx}`}
                                     name={`${section.id}[]`}
                                     type="checkbox"
-                                    onChange={(e) =>
+                                    onClick={(e) =>
                                       handleFilter(e, section, option)
                                     }
                                     className="col-start-1 row-start-1 appearance-none rounded border border-gray-300 bg-white checked:border-indigo-600 checked:bg-indigo-600 indeterminate:border-indigo-600 indeterminate:bg-indigo-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 forced-colors:appearance-auto"
@@ -356,7 +357,7 @@ export default function ProductList() {
                                     defaultChecked={option.checked}
                                     id={`filter-${section.id}-${optionIdx}`}
                                     name={`${section.id}[]`}
-                                    onChange={(e) =>
+                                    onClick={(e) =>
                                       handleFilter(e, section, option)
                                     }
                                     type="checkbox"
