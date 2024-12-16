@@ -56,7 +56,7 @@ export default function Navbar({ children }) {
                 <div className="hidden md:block">
                   <div className="ml-10 flex items-baseline space-x-4">
                     {navigation.map((item) => (
-                      <a
+                      <div
                         key={item.name}
                         href={item.href}
                         aria-current={item.current ? "page" : undefined}
@@ -68,7 +68,7 @@ export default function Navbar({ children }) {
                         )}
                       >
                         {item.name}
-                      </a>
+                      </div>
                     ))}
                   </div>
                 </div>
@@ -108,12 +108,12 @@ export default function Navbar({ children }) {
                     >
                       {userNavigation.map((item) => (
                         <MenuItem key={item.name}>
-                          <a
+                          <div
                             href={item.href}
                             className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:outline-none"
                           >
                             {item.name}
-                          </a>
+                          </div>
                         </MenuItem>
                       ))}
                     </MenuItems>

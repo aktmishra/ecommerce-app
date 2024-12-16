@@ -1,11 +1,9 @@
-import React, { useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { increment, incrementAsync, selectCount } from "../authSlice";
+import React  from "react";
+ 
 import { Link } from "react-router";
 
 export default function Login() {
-  // const count = useSelector(selectCount);
-  // const dispatch = useDispatch();
+  
 
   return (
     <div>

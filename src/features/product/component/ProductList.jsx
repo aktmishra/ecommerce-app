@@ -11,7 +11,7 @@ import {
   MenuItem,
   MenuItems,
 } from "@headlessui/react";
-import { XMarkIcon, StarIcon } from "@heroicons/react/24/outline";
+import { XMarkIcon } from "@heroicons/react/24/outline";
 import {
   ChevronDownIcon,
   FunnelIcon,
@@ -19,24 +19,53 @@ import {
   PlusIcon,
   Squares2X2Icon,
 } from "@heroicons/react/20/solid";
-import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
+
 import { useSelector, useDispatch } from "react-redux";
-import { Link } from "react-router";
+
 import {
-  selectAllProducts,
   fetchAllProductsAsync,
   fetchProductsByFiltersAsync,
 } from "../productSlice";
+import Pagination from "../../pagination/Pagination";
+import ProductGrid from "./ProductGrid";
 
 const sortOptions = [
-  { name: "Most Popular", href: "#", current: true },
-  { name: "Best Rating", href: "#", current: false },
-  { name: "Newest", href: "#", current: false },
-  { name: "Price: Low to High", href: "#", current: false },
-  { name: "Price: High to Low", href: "#", current: false },
+  { name: "Best Rating", sort: "rating", order: "desc", current: false },
+
+  { name: "Price: Low to High", sort: "price", order: "asc", current: false },
+  { name: "Price: High to Low", sort: "price", order: "desc", current: false },
 ];
 
 const filters = [
+  {
+    id: "category",
+    name: "Category",
+    options: [
+      { value: "beauty", label: "Beauty", checked: false },
+      { value: "fragrances", label: "Fragrances", checked: false },
+      { value: "furniture", label: "Furniture", checked: false },
+      { value: "groceries", label: "Groceries", checked: false },
+      {
+        value: "home-decoration",
+        label: "Home Decoration",
+        checked: false,
+      },
+      {
+        value: "kitchen-accessories",
+        label: "Kitchen Accessories",
+        checked: false,
+      },
+      { value: "laptops", label: "laptops", checked: false },
+      { value: "mens-shirts", label: "mens shirts", checked: false },
+      { value: "mens-shoes", label: "mens shoes", checked: false },
+      { value: "mens-watches", label: "mens watches", checked: false },
+      {
+        value: "mobile-accessories",
+        label: "mobile accessories",
+        checked: false,
+      },
+    ],
+  },
   {
     id: "brand",
     name: "Brand",
@@ -63,7 +92,7 @@ const filters = [
       { value: "Furniture Co.", label: "Furniture Co.", checked: false },
       { value: "Knoll", label: "Knoll", checked: false },
       { value: "Bath Trends", label: "Bath Trends", checked: false },
-      { value: undefined, label: undefined, checked: false },
+
       { value: "Apple", label: "Apple", checked: false },
       { value: "Asus", label: "Asus", checked: false },
       { value: "Huawei", label: "Huawei", checked: false },
@@ -87,35 +116,6 @@ const filters = [
       { value: "Amazon", label: "Amazon", checked: false },
     ],
   },
-  {
-    id: "category",
-    name: "Category",
-    options: [
-      { value: "beauty", label: "beauty", checked: false },
-      { value: "fragrances", label: "fragrances", checked: false },
-      { value: "furniture", label: "furniture", checked: false },
-      { value: "groceries", label: "groceries", checked: false },
-      {
-        value: "home decoration",
-        label: "home decoration",
-        checked: false,
-      },
-      {
-        value: "kitchen accessories",
-        label: "kitchen accessories",
-        checked: false,
-      },
-      { value: "laptops", label: "laptops", checked: false },
-      { value: "mens shirts", label: "mens shirts", checked: false },
-      { value: "mens shoes", label: "mens shoes", checked: false },
-      { value: "mens watches", label: "mens watches", checked: false },
-      {
-        value: "mobile accessories",
-        label: "mobile accessories",
-        checked: false,
-      },
-    ],
-  },
 ];
 
 function classNames(...classes) {
@@ -123,7 +123,6 @@ function classNames(...classes) {
 }
 
 export default function ProductList() {
-  const products = useSelector(selectAllProducts);
   const dispatch = useDispatch();
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [filter, setFilter] = useState({});
@@ -133,10 +132,20 @@ export default function ProductList() {
 
   const handleFilter = (e, section, option) => {
     const newFilter = { ...filter, [section.id]: option.value };
+    console.log(e);
     // setState is async, thts why newFilter is decleared and passed to setFilter()
     setFilter(newFilter);
     dispatch(fetchProductsByFiltersAsync(newFilter));
     console.log(section.id, option.value);
+  };
+  const handleSort = (e, option) => {
+    const newFilter = { ...filter, _sort: option.sort, _order: option.order };
+    console.log(e);
+    console.log(option);
+    // setState is async, thts why newFilter is decleared and passed to setFilter()
+    setFilter(newFilter);
+    dispatch(fetchProductsByFiltersAsync(newFilter));
+    console.log(option.sort, option.order);
   };
 
   return (
@@ -209,7 +218,7 @@ export default function ProductList() {
                                     id={`filter-mobile-${section.id}-${optionIdx}`}
                                     name={`${section.id}[]`}
                                     type="checkbox"
-                                    onClick={(e) =>
+                                    onChange={(e) =>
                                       handleFilter(e, section, option)
                                     }
                                     className="col-start-1 row-start-1 appearance-none rounded border border-gray-300 bg-white checked:border-indigo-600 checked:bg-indigo-600 indeterminate:border-indigo-600 indeterminate:bg-indigo-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 forced-colors:appearance-auto"
@@ -260,6 +269,7 @@ export default function ProductList() {
               </h1>
 
               <div className="flex items-center">
+                {/* Sorting */}
                 <Menu as="div" className="relative inline-block text-left">
                   <div>
                     <MenuButton className="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900">
@@ -278,8 +288,8 @@ export default function ProductList() {
                     <div className="py-1">
                       {sortOptions.map((option) => (
                         <MenuItem key={option.name}>
-                          <a
-                            href={option.href}
+                          <div
+                            onClick={(e) => handleSort(e, option)}
                             className={classNames(
                               option.current
                                 ? "font-medium text-gray-900"
@@ -288,7 +298,7 @@ export default function ProductList() {
                             )}
                           >
                             {option.name}
-                          </a>
+                          </div>
                         </MenuItem>
                       ))}
                     </div>
@@ -319,7 +329,7 @@ export default function ProductList() {
               </h2>
 
               <div className="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-4">
-                {/* Filters */}
+                {/* Desktop Filters */}
                 <form className="hidden lg:block">
                   <h3 className="sr-only">Categories</h3>
 
@@ -357,7 +367,7 @@ export default function ProductList() {
                                     defaultChecked={option.checked}
                                     id={`filter-${section.id}-${optionIdx}`}
                                     name={`${section.id}[]`}
-                                    onClick={(e) =>
+                                    onChange={(e) =>
                                       handleFilter(e, section, option)
                                     }
                                     type="checkbox"
@@ -399,159 +409,17 @@ export default function ProductList() {
                   ))}
                 </form>
                 {/* grid content start */}
-                <div className="lg:col-span-3">
-                  {/* Your content */}
-                  <div className="bg-white">
-                    <div className="mx-auto max-w-2xl px-4 py-0 sm:px-6 sm:py-0 lg:max-w-7xl lg:px-8">
-                      <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
-                        {products.map((product) => (
-                          <Link to="/product-detail" key={product.id}>
-                            <div className="group relative min-h-60 border-gray-300 border-2 p-1 rounded-md  ">
-                              <img
-                                alt={product.title}
-                                src={product.thumbnail}
-                                className="aspect-square  w-full rounded-md bg-gray-200 object-cover group-hover:opacity-75 lg:aspect-auto lg:h-80"
-                              />
-                              <div className="mt-4 flex justify-between">
-                                <div>
-                                  <h3 className="text-sm text-gray-700">
-                                    <a href={product.thumbnail}>
-                                      <span
-                                        aria-hidden="true"
-                                        className="absolute inset-0"
-                                      />
-                                      {product.title}
-                                    </a>
-                                  </h3>
-                                  <a
-                                    href=""
-                                    className="flex gap-1 items-center"
-                                  >
-                                    <StarIcon className="size-4  text-yellow-400 fill-yellow-400"></StarIcon>
-                                    <span className="text-gray-600 text-sm">
-                                      {product.rating}
-                                    </span>
-                                  </a>
-                                  <p className="mt-1 text-sm text-gray-500">
-                                    {product.color}
-                                  </p>
-                                </div>
-                                <div>
-                                  <p className="text-sm font-medium text-gray-900">
-                                    $
-                                    {Math.round(
-                                      product.price *
-                                        (1 - product.discountPercentage / 100)
-                                    )}
-                                  </p>
-                                  <p className="text-sm line-through font-medium text-gray-600">
-                                    ${product.price}
-                                  </p>
-                                </div>
-                              </div>
-                            </div>
-                          </Link>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                {/* grid content end */}
+                <ProductGrid></ProductGrid>
               </div>
             </section>
-            {/* section of product and filter end here */}
 
             {/* pagination code */}
-            <div className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
-              <div className="flex flex-1 justify-between sm:hidden">
-                <a
-                  href="#"
-                  className="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
-                >
-                  Previous
-                </a>
-                <a
-                  href="#"
-                  className="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
-                >
-                  Next
-                </a>
-              </div>
-              <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
-                <div>
-                  <p className="text-sm text-gray-700">
-                    Showing <span className="font-medium">1</span> to{" "}
-                    <span className="font-medium">10</span> of{" "}
-                    <span className="font-medium">97</span> results
-                  </p>
-                </div>
-                <div>
-                  <nav
-                    aria-label="Pagination"
-                    className="isolate inline-flex -space-x-px rounded-md shadow-sm"
-                  >
-                    <a
-                      href="#"
-                      className="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
-                    >
-                      <span className="sr-only">Previous</span>
-                      <ChevronLeftIcon aria-hidden="true" className="size-5" />
-                    </a>
-                    {/* Current: "z-10 bg-indigo-600 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600", Default: "text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-offset-0" */}
-                    <a
-                      href="#"
-                      aria-current="page"
-                      className="relative z-10 inline-flex items-center bg-indigo-600 px-4 py-2 text-sm font-semibold text-white focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                    >
-                      1
-                    </a>
-                    <a
-                      href="#"
-                      className="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
-                    >
-                      2
-                    </a>
-                    <a
-                      href="#"
-                      className="relative hidden items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 md:inline-flex"
-                    >
-                      3
-                    </a>
-                    <span className="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-300 focus:outline-offset-0">
-                      ...
-                    </span>
-                    <a
-                      href="#"
-                      className="relative hidden items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 md:inline-flex"
-                    >
-                      8
-                    </a>
-                    <a
-                      href="#"
-                      className="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
-                    >
-                      9
-                    </a>
-                    <a
-                      href="#"
-                      className="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
-                    >
-                      10
-                    </a>
-                    <a
-                      href="#"
-                      className="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
-                    >
-                      <span className="sr-only">Next</span>
-                      <ChevronRightIcon aria-hidden="true" className="size-5" />
-                    </a>
-                  </nav>
-                </div>
-              </div>
-            </div>
+            <Pagination></Pagination>
           </main>
         </div>
       </div>
     </div>
   );
 }
+
+function MobileFilter(params) {}
