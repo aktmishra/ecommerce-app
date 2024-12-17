@@ -20,7 +20,7 @@ import {
   Squares2X2Icon,
 } from "@heroicons/react/20/solid";
 
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 
 import {
   fetchAllProductsAsync,
@@ -126,27 +126,39 @@ export default function ProductList() {
   const dispatch = useDispatch();
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [filter, setFilter] = useState({});
-  useEffect(() => {
-    dispatch(fetchAllProductsAsync());
-  }, [dispatch]);
+  const [sort, setSort] = useState({});
 
   const handleFilter = (e, section, option) => {
-    const newFilter = { ...filter, [section.id]: option.value };
-    console.log(e);
+    const newFilter = { ...filter };
+    if (e.target.checked) {
+      if (newFilter[section.id]) {
+        newFilter[section.id].push(option.value);
+      } else {
+        newFilter[section.id] = [option.value];
+      }
+    } else {
+      const index = newFilter[section.id].findIndex(
+        (value) => value === option.value
+      );
+      newFilter[section.id].splice(index, 1);
+    }
     // setState is async, thts why newFilter is decleared and passed to setFilter()
     setFilter(newFilter);
-    dispatch(fetchProductsByFiltersAsync(newFilter));
     console.log(section.id, option.value);
   };
   const handleSort = (e, option) => {
-    const newFilter = { ...filter, _sort: option.sort, _order: option.order };
-    console.log(e);
-    console.log(option);
+    const newSort = { _sort: option.sort, _order: option.order };
     // setState is async, thts why newFilter is decleared and passed to setFilter()
-    setFilter(newFilter);
-    dispatch(fetchProductsByFiltersAsync(newFilter));
-    console.log(option.sort, option.order);
+    setSort(newSort);
+    dispatch(fetchProductsByFiltersAsync(newSort));
+    console.log(newSort);
   };
+  useEffect(() => {
+    // dispatch(fetchAllProductsAsync()); insted of this fetchProductsByFiltersAsync(filter) work
+    dispatch(fetchProductsByFiltersAsync({filter, sort}));
+    console.log(filter);
+    console.log(sort);
+  }, [dispatch, filter, sort]);
 
   return (
     <div>
@@ -421,5 +433,3 @@ export default function ProductList() {
     </div>
   );
 }
-
-function MobileFilter(params) {}
