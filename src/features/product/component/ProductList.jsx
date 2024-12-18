@@ -22,16 +22,13 @@ import {
 
 import { useDispatch } from "react-redux";
 
-import {
-  fetchAllProductsAsync,
-  fetchProductsByFiltersAsync,
-} from "../productSlice";
+import { fetchProductsByFiltersAsync } from "../productSlice";
 import Pagination from "../../pagination/Pagination";
 import ProductGrid from "./ProductGrid";
+import { ITEMS_PER_PAGE } from "../../../app/constant";
 
 const sortOptions = [
   { name: "Best Rating", sort: "rating", order: "desc", current: false },
-
   { name: "Price: Low to High", sort: "price", order: "asc", current: false },
   { name: "Price: High to Low", sort: "price", order: "desc", current: false },
 ];
@@ -127,6 +124,8 @@ export default function ProductList() {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [filter, setFilter] = useState({});
   const [sort, setSort] = useState({});
+  const [page, setPage] = useState(1);
+  const totalItems = 100;
 
   const handleFilter = (e, section, option) => {
     const newFilter = { ...filter };
@@ -146,19 +145,32 @@ export default function ProductList() {
     setFilter(newFilter);
     console.log(section.id, option.value);
   };
+
   const handleSort = (e, option) => {
     const newSort = { _sort: option.sort, _order: option.order };
     // setState is async, thts why newFilter is decleared and passed to setFilter()
     setSort(newSort);
-    dispatch(fetchProductsByFiltersAsync(newSort));
-    console.log(newSort);
+    // dispatch(fetchProductsByFiltersAsync(newSort));
+    // console.log(newSort);
   };
+
+  const handlePage = (page) => {
+    setPage(page);
+    console.log(page);
+  };
+
   useEffect(() => {
     // dispatch(fetchAllProductsAsync()); insted of this fetchProductsByFiltersAsync(filter) work
-    dispatch(fetchProductsByFiltersAsync({filter, sort}));
+    const pagination = { _page: page, _per_page: ITEMS_PER_PAGE };
+    dispatch(fetchProductsByFiltersAsync({ filter, sort, pagination }));
     console.log(filter);
     console.log(sort);
-  }, [dispatch, filter, sort]);
+    console.log(pagination);
+  }, [dispatch, filter, sort, page]);
+
+  useEffect(() => {
+    setPage(1)
+  },[totalItems,sort]);
 
   return (
     <div>
@@ -426,7 +438,11 @@ export default function ProductList() {
             </section>
 
             {/* pagination code */}
-            <Pagination></Pagination>
+            <Pagination
+              handlePage={handlePage}
+              totalItems={totalItems}
+              page={page}
+            ></Pagination>
           </main>
         </div>
       </div>
