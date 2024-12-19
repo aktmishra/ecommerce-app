@@ -20,9 +20,15 @@ import {
   Squares2X2Icon,
 } from "@heroicons/react/20/solid";
 
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
-import { fetchProductsByFiltersAsync } from "../productSlice";
+import {
+  fetchBrandsAsync,
+  fetchCategoriesAsync,
+  fetchProductsByFiltersAsync,
+  selectBrands,
+  selectCategories,
+} from "../productSlice";
 import Pagination from "../../pagination/Pagination";
 import ProductGrid from "./ProductGrid";
 import { ITEMS_PER_PAGE } from "../../../app/constant";
@@ -31,88 +37,6 @@ const sortOptions = [
   { name: "Best Rating", sort: "rating", order: "desc", current: false },
   { name: "Price: Low to High", sort: "price", order: "asc", current: false },
   { name: "Price: High to Low", sort: "price", order: "desc", current: false },
-];
-
-const filters = [
-  {
-    id: "category",
-    name: "Category",
-    options: [
-      { value: "beauty", label: "Beauty", checked: false },
-      { value: "fragrances", label: "Fragrances", checked: false },
-      { value: "furniture", label: "Furniture", checked: false },
-      { value: "groceries", label: "Groceries", checked: false },
-      {
-        value: "home-decoration",
-        label: "Home Decoration",
-        checked: false,
-      },
-      {
-        value: "kitchen-accessories",
-        label: "Kitchen Accessories",
-        checked: false,
-      },
-      { value: "laptops", label: "laptops", checked: false },
-      { value: "mens-shirts", label: "mens shirts", checked: false },
-      { value: "mens-shoes", label: "mens shoes", checked: false },
-      { value: "mens-watches", label: "mens watches", checked: false },
-      {
-        value: "mobile-accessories",
-        label: "mobile accessories",
-        checked: false,
-      },
-    ],
-  },
-  {
-    id: "brand",
-    name: "Brand",
-    options: [
-      { value: "Essence", label: "Essence", checked: false },
-      { value: "Glamour Beauty", label: "Glamour Beauty", checked: false },
-      { value: "Velvet Touch", label: "Velvet Touch", checked: false },
-      { value: "Chic Cosmetics", label: "Chic Cosmetics", checked: false },
-      { value: "Nail Couture", label: "Nail Couture", checked: false },
-      { value: "Calvin Klein", label: "Calvin Klein", checked: false },
-      { value: "Chanel", label: "Chanel", checked: false },
-      { value: "Dior", label: "Dior", checked: false },
-      {
-        value: "Dolce & Gabbana",
-        label: "Dolce & Gabbana",
-        checked: false,
-      },
-      { value: "Gucci", label: "Gucci", checked: false },
-      {
-        value: "Annibale Colombo",
-        label: "Annibale Colombo",
-        checked: false,
-      },
-      { value: "Furniture Co.", label: "Furniture Co.", checked: false },
-      { value: "Knoll", label: "Knoll", checked: false },
-      { value: "Bath Trends", label: "Bath Trends", checked: false },
-
-      { value: "Apple", label: "Apple", checked: false },
-      { value: "Asus", label: "Asus", checked: false },
-      { value: "Huawei", label: "Huawei", checked: false },
-      { value: "Lenovo", label: "Lenovo", checked: false },
-      { value: "Dell", label: "Dell", checked: false },
-      { value: "Fashion Trends", label: "Fashion Trends", checked: false },
-      { value: "Gigabyte", label: "Gigabyte", checked: false },
-      { value: "Classic Wear", label: "Classic Wear", checked: false },
-      { value: "Casual Comfort", label: "Casual Comfort", checked: false },
-      { value: "Urban Chic", label: "Urban Chic", checked: false },
-      { value: "Nike", label: "Nike", checked: false },
-      { value: "Puma", label: "Puma", checked: false },
-      { value: "Off White", label: "Off White", checked: false },
-      {
-        value: "Fashion Timepieces",
-        label: "Fashion Timepieces",
-        checked: false,
-      },
-      { value: "Longines", label: "Longines", checked: false },
-      { value: "Rolex", label: "Rolex", checked: false },
-      { value: "Amazon", label: "Amazon", checked: false },
-    ],
-  },
 ];
 
 function classNames(...classes) {
@@ -125,7 +49,21 @@ export default function ProductList() {
   const [filter, setFilter] = useState({});
   const [sort, setSort] = useState({});
   const [page, setPage] = useState(1);
+  const categories = useSelector(selectCategories);
+  const brands = useSelector(selectBrands);
   const totalItems = 100;
+  const filters = [
+    {
+      id: "category",
+      name: "Category",
+      options: categories,
+    },
+    {
+      id: "brand",
+      name: "Brand",
+      options: brands,
+    },
+  ];
 
   const handleFilter = (e, section, option) => {
     const newFilter = { ...filter };
@@ -148,7 +86,7 @@ export default function ProductList() {
 
   const handleSort = (e, option) => {
     const newSort = { _sort: option.sort, _order: option.order };
-    // setState is async, thts why newFilter is decleared and passed to setFilter()
+    // setState is async, thts why newsort is decleared and passed to setSort()
     setSort(newSort);
     // dispatch(fetchProductsByFiltersAsync(newSort));
     // console.log(newSort);
@@ -156,21 +94,22 @@ export default function ProductList() {
 
   const handlePage = (page) => {
     setPage(page);
-    console.log(page);
   };
 
   useEffect(() => {
     // dispatch(fetchAllProductsAsync()); insted of this fetchProductsByFiltersAsync(filter) work
     const pagination = { _page: page, _per_page: ITEMS_PER_PAGE };
     dispatch(fetchProductsByFiltersAsync({ filter, sort, pagination }));
-    console.log(filter);
-    console.log(sort);
-    console.log(pagination);
   }, [dispatch, filter, sort, page]);
 
   useEffect(() => {
-    setPage(1)
-  },[totalItems,sort]);
+    setPage(1);
+  }, [totalItems, sort]);
+
+  useEffect(() => {
+    dispatch(fetchCategoriesAsync());
+    dispatch(fetchBrandsAsync());
+  }, []);
 
   return (
     <div>
