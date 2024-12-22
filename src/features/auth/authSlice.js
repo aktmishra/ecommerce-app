@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { createUser } from "./authAPI";
+import { createUser, fetchUser } from "./authAPI";
 
 const initialState = {
   loggedInUser: null,
@@ -11,6 +11,15 @@ export const createUserAsync = createAsyncThunk(
   "user/createUser",
   async (userData) => {
     const response = await createUser(userData);
+    // The value we return becomes the `fulfilled` action payload
+    console.log(response)
+    return response.data;
+  }
+);
+export const fetchUserAsync = createAsyncThunk(
+  "user/fetchUser",
+  async (loginInfo) => {
+    const response = await fetchUser(loginInfo);
     // The value we return becomes the `fulfilled` action payload
     console.log(response)
     return response.data;
@@ -28,13 +37,25 @@ export const userSlice = createSlice({
       })
       .addCase(createUserAsync.fulfilled, (state, action) => {
         state.status = "idle";
-        state.value += action.payload;
+         
+      })
+      .addCase(fetchUserAsync.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(fetchUserAsync.fulfilled, (state, action) => {
+        state.status = "idle";
+        state.loggedInUser = action.payload;
+      })
+      .addCase(fetchUserAsync.rejected, (state, action) => {
+        state.status = "idle";
+        state.error = action.error;
       });
   },
 });
 
 export const {} = userSlice.actions;
 
-export const selectLoggedInUser = (state) => state.counter.loggedInUser;
+export const selectLoggedInUser = (state) => state.user.loggedInUser;
+export const selectError = (state) => state.user.error;
 
 export default userSlice.reducer;
