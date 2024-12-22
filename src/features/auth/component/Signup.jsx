@@ -1,9 +1,20 @@
 import React from "react";
- 
+import { useForm } from "react-hook-form";
+import { useDispatch } from "react-redux";
+
 import { Link } from "react-router";
+import { createUserAsync } from "../authSlice";
 
 export default function Signup() {
- 
+  const dispatch = useDispatch();
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm();
+
+  console.log(errors);
 
   return (
     <div>
@@ -20,7 +31,19 @@ export default function Signup() {
         </div>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form action="#" method="POST" className="space-y-6">
+          <form
+            noValidate
+            className="space-y-6"
+            onSubmit={handleSubmit((userData) => {
+              dispatch(
+                createUserAsync({
+                  email: userData.email,
+                  password: userData.password,
+                })
+              );
+              console.log(userData);
+            })}
+          >
             <div>
               <label
                 htmlFor="email"
@@ -31,12 +54,19 @@ export default function Signup() {
               <div className="mt-2">
                 <input
                   id="email"
-                  name="email"
                   type="email"
-                  required
-                  autoComplete="email"
+                  {...register("email", {
+                    required: "Email is required",
+                    pattern: {
+                      value: /\b[\w\.-]+@[\w\.-]+\.\w{2,4}\b/gi,
+                      message: "Email is not valid",
+                    },
+                  })}
                   className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
                 />
+                {errors.email && (
+                  <p className="text-red-500">{errors.email.message}</p>
+                )}
               </div>
             </div>
 
@@ -48,39 +78,64 @@ export default function Signup() {
                 >
                   Password
                 </label>
-                 
               </div>
               <div className="mt-2">
                 <input
                   id="password"
-                  name="password"
                   type="password"
-                  required
-                  autoComplete="current-password"
+                  {...register("password", {
+                    required: "Password is required",
+                    pattern: {
+                      value:
+                        /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/gm,
+                      message: [
+                        "- At least 8 characters",
+                        "- Must contain at least 1 uppercase letter, 1 lowercase letter, and 1 number",
+                        "- Can contain special characters",
+                      ],
+                    },
+                  })}
                   className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
                 />
+                {errors.password &&
+                  errors.password.message.map((message, id) => {
+                    return (
+                      <p
+                        key={id}
+                        className="text-red-500 text-sm leading-tight text-wrap"
+                      >
+                        {message}
+                      </p>
+                    );
+                  })}
               </div>
             </div>
 
             <div>
               <div className="flex items-center justify-between">
                 <label
-                  htmlFor="confirm-password"
+                  htmlFor="confirmPassword"
                   className="block text-sm/6 font-medium text-gray-900"
                 >
                   Confirm Password
                 </label>
-                
               </div>
               <div className="mt-2">
                 <input
-                  id="confirm-password"
-                  name="password"
+                  id="confirmPassword"
                   type="password"
-                  required
-                  autoComplete="current-password"
+                  {...register("confirmPassword", {
+                    required: "Confirm password is required",
+                    validate: (value, formValues) =>
+                      value === formValues.password || "Password not matching",
+                  })}
                   className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
                 />
+                {errors.confirmPassword && (
+                  <p className="text-red-500">
+                    {errors.confirmPassword.message}
+                  </p>
+                )}
               </div>
             </div>
 

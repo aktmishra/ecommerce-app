@@ -34,6 +34,7 @@ function classNames(...classes) {
 }
 
 export default function ProductDeatails() {
+  // TODO: in server data we will add color size highlight
   const [selectedColor, setSelectedColor] = useState(colors[0]);
   const [selectedSize, setSelectedSize] = useState(sizes[2]);
   const product = useSelector(selectProductById); // here when I refresh the page then the value of selectedProduct become null in store.state even
@@ -42,8 +43,8 @@ export default function ProductDeatails() {
   const dispatch = useDispatch();
   const params = useParams();
   const id = params.id
-  
-  //  const product = {
+  console.log(params)
+  //  const product = [{
   //   "id": 11,
   //   "title": "Annibale Colombo Bed",
   //   "description": "The Annibale Colombo Bed is a luxurious and elegant bed frame, crafted with high-quality materials for a comfortable and stylish bedroom.",
@@ -97,7 +98,7 @@ export default function ProductDeatails() {
   //     "https://cdn.dummyjson.com/products/images/furniture/Annibale%20Colombo%20Bed/3.png"
   //   ],
   //   "thumbnail": "https://cdn.dummyjson.com/products/images/furniture/Annibale%20Colombo%20Bed/thumbnail.png"
-  // }
+  // }]
  
   useEffect(() => {
     dispatch(fetchProductByIdAsync(id));
@@ -114,7 +115,7 @@ export default function ProductDeatails() {
             <li>
               <div className="flex items-center">
                 <a className="mr-2 text-sm font-medium text-gray-900">
-                  {product.category}
+                  {product[0].category}
                 </a>
                 <svg
                   fill="currentColor"
@@ -133,7 +134,7 @@ export default function ProductDeatails() {
                 aria-current="page"
                 className="font-medium text-gray-500 hover:text-gray-600"
               >
-                {product.title}
+                {product[0].title}
               </a>
             </li>
           </ol>
@@ -142,25 +143,25 @@ export default function ProductDeatails() {
         {/* Image gallery */}
         <div className="mx-auto mt-6 max-w-2xl sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-3 lg:gap-x-8 lg:px-8">
           <img
-            alt={product.title}
-            src={product.images[0] || product.thumbnail}
+            alt={product[0].title}
+            src={product[0].images[0] || product[0].thumbnail}
             className="hidden aspect-[3/4] size-full rounded-lg object-cover lg:block"
           />
           <div className="hidden lg:grid lg:grid-cols-1 lg:gap-y-8">
             <img
-              alt={product.title}
-              src={product.images[1] || product.thumbnail}
+              alt={product[0].title}
+              src={product[0].images[1] || product[0].thumbnail}
               className="aspect-[3/2] size-full rounded-lg object-cover"
             />
             <img
-              alt={product.title}
-              src={product.images[2] || product.thumbnail}
+              alt={product[0].title}
+              src={product[0].images[2] || product[0].thumbnail}
               className="aspect-[3/2] size-full rounded-lg object-cover"
             />
           </div>
           <img
-            alt={product.title}
-            src={product.images[3] || product.thumbnail}
+            alt={product[0].title}
+            src={product[0].images[3] || product[0].thumbnail}
             className="aspect-[4/5] size-full object-cover sm:rounded-lg lg:aspect-[3/4]"
           />
         </div>
@@ -177,14 +178,14 @@ export default function ProductDeatails() {
           <div className="mt-4 lg:row-span-3 lg:mt-0">
             <h2 className="sr-only">Product information</h2>
             <p className="text-3xl tracking-tight text-gray-900">
-              ${product.price}
+              ${product[0].price}
             </p>
 
             {/* Reviews */}
             <div className="mt-6">
               <h3 className="sr-only">Reviews</h3>
               <div className="flex items-center">
-                <p className="mr-2 text-sm text-gray-800">{product.rating} </p>
+                <p className="mr-2 text-sm text-gray-800">{product[0].rating} </p>
                 <div className="flex items-center">
                   {[0, 1, 2, 3, 4].map((rating) => (
                     <StarIcon
@@ -204,7 +205,7 @@ export default function ProductDeatails() {
                   href={reviews.href}
                   className="ml-3 text-sm font-medium text-indigo-600 hover:text-indigo-500"
                 >
-                  {product.reviews.length} reviews
+                  {product[0].reviews.length} reviews
                 </a>
               </div>
             </div>
@@ -323,7 +324,7 @@ export default function ProductDeatails() {
               <h3 className="sr-only">Description</h3>
 
               <div className="space-y-6">
-                <p className="text-base text-gray-900">{product.description}</p>
+                <p className="text-base text-gray-900">{product[0].description}</p>
               </div>
             </div>
 
@@ -345,7 +346,7 @@ export default function ProductDeatails() {
               <h2 className="text-sm font-medium text-gray-900">Details</h2>
 
               <div className="mt-4 space-y-6">
-                <p className="text-sm text-gray-600">{product.description}</p>
+                <p className="text-sm text-gray-600">{product[0].description}</p>
               </div>
             </div>
           </div>

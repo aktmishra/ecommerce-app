@@ -1,11 +1,17 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { fetchAllProducts, fetchBrands, fetchCategories, fetchProductById, fetchProductsByFilters } from "./productAPI";
+import {
+  fetchAllProducts,
+  fetchBrands,
+  fetchCategories,
+  fetchProductById,
+  fetchProductsByFilters,
+} from "./productAPI";
 
 const initialState = {
   products: [],
   categories: [],
   brands: [],
-  selectedProduct:null,
+  selectedProduct: null,
   totalItems: 0,
   status: "idle",
 };
@@ -52,7 +58,7 @@ export const fetchProductByIdAsync = createAsyncThunk(
     const response = await fetchProductById(id);
     // The value we return becomes the `fulfilled` action payload
     console.log(response);
-    return response.data[0];
+    return response.data;
   }
 );
 
