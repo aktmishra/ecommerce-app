@@ -12,7 +12,9 @@ import {
   ShoppingCartIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
+import { useSelector } from "react-redux";
 import { Link } from "react-router";
+import { selectItems } from "../cart/cartSlice";
 
 const user = {
   name: "Tom Cook",
@@ -28,9 +30,9 @@ const navigation = [
   { name: "Reports", href: "#", current: false },
 ];
 const userNavigation = [
-  { name: "Your Profile", href: "#" },
-  { name: "Settings", href: "#" },
-  { name: "Sign out", href: "#" },
+  { name: "Your Profile", link: "/" },
+  { name: "Settings", link: "/" },
+  { name: "Sign out", link: "/login" },
 ];
 
 function classNames(...classes) {
@@ -38,6 +40,8 @@ function classNames(...classes) {
 }
 
 export default function Navbar({ children }) {
+  const items = useSelector(selectItems);
+  console.log(items)
   return (
     <>
       <div className="min-h-full">
@@ -46,12 +50,13 @@ export default function Navbar({ children }) {
             <div className="flex h-16 items-center justify-between">
               <div className="flex items-center">
                 <div className="shrink-0">
-                 <Link to="/">
-                 <img
-                    alt="Your Company"
-                    src="https://tailwindui.com/plus/img/logos/mark.svg?color=indigo&shade=500"
-                    className="size-8"
-                  /></Link>
+                  <Link to="/">
+                    <img
+                      alt="Your Company"
+                      src="https://tailwindui.com/plus/img/logos/mark.svg?color=indigo&shade=500"
+                      className="size-8"
+                    />
+                  </Link>
                 </div>
                 <div className="hidden md:block">
                   <div className="ml-10 flex items-baseline space-x-4">
@@ -85,9 +90,9 @@ export default function Navbar({ children }) {
                       <ShoppingCartIcon aria-hidden="true" className="size-6" />
                     </button>
                   </Link>
-                  <span className="inline-flex items-center rounded-md bg-red-50 px-2 py-0 mb-7 -ml-1 text-xs font-medium text-red-700 ring-1 ring-inset ring-red-600/10">
-                    {3}
-                  </span>
+                  {items.length>0 && <span className="inline-flex items-center rounded-md bg-red-50 px-2 py-0 mb-7 -ml-1 text-xs font-medium text-red-700 ring-1 ring-inset ring-red-600/10">
+                  {items.length}
+                </span>}
 
                   {/* Profile dropdown */}
                   <Menu as="div" className="relative ml-3">
@@ -108,12 +113,12 @@ export default function Navbar({ children }) {
                     >
                       {userNavigation.map((item) => (
                         <MenuItem key={item.name}>
-                          <div
-                            href={item.href}
+                          <Link
+                            to={item.link}
                             className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:outline-none"
                           >
                             {item.name}
-                          </div>
+                          </Link>
                         </MenuItem>
                       ))}
                     </MenuItems>
@@ -184,20 +189,20 @@ export default function Navbar({ children }) {
                     <ShoppingCartIcon aria-hidden="true" className="size-6" />
                   </button>
                 </Link>
-                <span className="inline-flex items-center rounded-md bg-red-50 px-2 py-0 mb-7 -ml-1 text-xs font-medium text-red-700 ring-1 ring-inset ring-red-600/10">
-                  {3}
-                </span>
+                {items.length>0 && <span className="inline-flex items-center rounded-md bg-red-50 px-2 py-0 mb-7 -ml-1 text-xs font-medium text-red-700 ring-1 ring-inset ring-red-600/10">
+                  {items.length}
+                </span>}
               </div>
               <div className="mt-3 space-y-1 px-2">
                 {userNavigation.map((item) => (
-                  <DisclosureButton
-                    key={item.name}
-                    as="a"
-                    href={item.href}
-                    className="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white"
-                  >
-                    {item.name}
-                  </DisclosureButton>
+                  <Link to={item.link} key={item.name}>
+                    <DisclosureButton
+                      as="a"
+                      className="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white"
+                    >
+                      {item.name}
+                    </DisclosureButton>
+                  </Link>
                 ))}
               </div>
             </div>

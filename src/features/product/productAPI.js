@@ -64,7 +64,8 @@ export function fetchProductById(id) {
     // TODO-- We will not hard-code here server url  here
     const response = await fetch(`http://localhost:8080/products?id=${id}`);
     const data = await response.json();
-    resolve({data});
+    
+    resolve({data : data[0]});
   });
 }
  

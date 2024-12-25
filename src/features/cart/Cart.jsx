@@ -1,36 +1,14 @@
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
 // import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router";
-const products = [
-  {
-    id: 1,
-    name: "Throwback Hip Bag",
-    href: "#",
-    color: "Salmon",
-    price: "$90.00",
-    quantity: 1,
-    imageSrc:
-      "https://tailwindui.com/plus/img/ecommerce-images/shopping-cart-page-04-product-01.jpg",
-    imageAlt:
-      "Salmon orange fabric pouch with match zipper, gray zipper pull, and adjustable hip belt.",
-  },
-  {
-    id: 2,
-    name: "Medium Stuff Satchel",
-    href: "#",
-    color: "Blue",
-    price: "$32.00",
-    quantity: 1,
-    imageSrc:
-      "https://tailwindui.com/plus/img/ecommerce-images/shopping-cart-page-04-product-02.jpg",
-    imageAlt:
-      "Front of satchel with blue canvas body, black straps and handle, drawstring top, and front zipper pouch.",
-  },
-  
-];
+import { selectItems } from "./cartSlice";
+ 
 
 export default function Cart() {
-  // const dispatch = useDispatch();
+  const items = useSelector(selectItems);
+ const totalAmount = items.reduce((amount, item)=>item.price*item.quantity+amount, 0);
+ const totalItem = items.reduce((total, items)=>items.quantity+total, 0)
 
   return (
     <div className="mt-8 mx-auto max-w-[80%] px-4 sm:px-6 lg:px-20 bg-white">
@@ -45,12 +23,12 @@ export default function Cart() {
             role="list"
             className="-my-6 divide-y divide-gray-200 px-4 py-6 sm:px-6 "
           >
-            {products.map((product) => (
+            {items.map((product) => (
               <li key={product.id} className="flex py-6">
                 <div className="size-24 shrink-0 overflow-hidden rounded-md border border-gray-200">
                   <img
-                    alt={product.imageAlt}
-                    src={product.imageSrc}
+                    alt={product.title}
+                    src={product.thumbnail}
                     className="size-full object-cover"
                   />
                 </div>
@@ -59,12 +37,12 @@ export default function Cart() {
                   <div>
                     <div className="flex justify-between text-base font-medium text-gray-900">
                       <h3>
-                        <a href={product.href}>{product.name}</a>
+                        <a href={product.href}>{product.title}</a>
                       </h3>
-                      <p className="ml-4">{product.price}</p>
+                      <p className="ml-4">${product.price}</p>
                     </div>
                     <p className="mt-1 text-sm text-gray-500">
-                      {product.color}
+                      {product.brand}
                     </p>
                   </div>
                   <div className="flex flex-1 items-end justify-between text-sm">
@@ -103,9 +81,13 @@ export default function Cart() {
       </div>
 
       <div className="border-t border-gray-200 mt-8 px-4 py-6 sm:px-6">
+      <div className="flex justify-between text-base font-medium text-gray-900">
+          <p>Total Items in Cart</p>
+          <p>${totalItem}</p>
+        </div>
         <div className="flex justify-between text-base font-medium text-gray-900">
           <p>Subtotal</p>
-          <p>$262.00</p>
+          <p>${totalAmount}</p>
         </div>
         <p className="mt-0.5 text-sm text-gray-500">
           Shipping and taxes calculated at checkout.

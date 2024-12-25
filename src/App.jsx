@@ -1,5 +1,5 @@
 import "./App.css";
-import React from "react";
+import React, { useEffect } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import SignupPage from "./pages/SignupPage";
@@ -9,21 +9,23 @@ import Home from "./pages/Home";
 import CheckoutPage from "./pages/CheckoutPage";
 import ProductDeatailsPage from "./pages/ProductDeatailsPage";
 import Protected from "./features/auth/component/Protected";
-
+import { useDispatch, useSelector } from "react-redux";
+import { selectLoggedInUser } from "./features/auth/authSlice";
+import { fetchCartItemsByUserIdAsync } from "./features/cart/cartSlice";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: (<Protected>
-      <Home></Home>
-    </Protected>),
+    element: (
+      <Protected>
+        <Home></Home>
+      </Protected>
+    ),
   },
 
   {
     path: "/signup",
-    element: 
-      <SignupPage></SignupPage>
-    ,
+    element: <SignupPage></SignupPage>,
   },
   {
     path: "/login",
@@ -31,25 +33,40 @@ const router = createBrowserRouter([
   },
   {
     path: "/cart",
-    element: (<Protected>
-      <CartPage></CartPage>
-    </Protected>),
+    element: (
+      <Protected>
+        <CartPage></CartPage>
+      </Protected>
+    ),
   },
   {
     path: "/checkout",
-    element: (<Protected>
-      <CheckoutPage></CheckoutPage>
-    </Protected>),
+    element: (
+      <Protected>
+        <CheckoutPage></CheckoutPage>
+      </Protected>
+    ),
   },
   {
     path: "/product-detail/:id",
-    element: (<Protected>
-      <ProductDeatailsPage></ProductDeatailsPage>
-    </Protected>),
+    element: (
+      <Protected>
+        <ProductDeatailsPage></ProductDeatailsPage>
+      </Protected>
+    ),
   },
 ]);
 
 function App() {
+  const dispatch = useDispatch();
+  const user = useSelector(selectLoggedInUser);
+
+  useEffect(() => {
+    if (user) {
+      dispatch(fetchCartItemsByUserIdAsync(user.id));
+    }
+  }, [dispatch, user]);
+
   return (
     <div className="App">
       <RouterProvider router={router} />

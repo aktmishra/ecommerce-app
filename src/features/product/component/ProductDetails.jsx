@@ -1,34 +1,34 @@
-"use client";
-
 import { useEffect, useState } from "react";
 import { StarIcon } from "@heroicons/react/20/solid";
 import { Radio, RadioGroup } from "@headlessui/react";
 import { Link, useParams } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProductByIdAsync, selectProductById } from "../productSlice";
+import { addToCartAsync } from "../../cart/cartSlice";
+import { selectLoggedInUser } from "../../auth/authSlice";
 
 const reviews = { href: "#", average: 4, totalCount: 117 };
-const colors =  [
-  { name: 'White', class: 'bg-white', selectedClass: 'ring-gray-400' },
-  { name: 'Gray', class: 'bg-gray-200', selectedClass: 'ring-gray-400' },
-  { name: 'Black', class: 'bg-gray-900', selectedClass: 'ring-gray-900' },
+const colors = [
+  { name: "White", class: "bg-white", selectedClass: "ring-gray-400" },
+  { name: "Gray", class: "bg-gray-200", selectedClass: "ring-gray-400" },
+  { name: "Black", class: "bg-gray-900", selectedClass: "ring-gray-900" },
 ];
-const sizes= [
-  { name: 'XXS', inStock: false },
-  { name: 'XS', inStock: true },
-  { name: 'S', inStock: true },
-  { name: 'M', inStock: true },
-  { name: 'L', inStock: true },
-  { name: 'XL', inStock: true },
-  { name: '2XL', inStock: true },
-  { name: '3XL', inStock: true }
+const sizes = [
+  { name: "XXS", inStock: false },
+  { name: "XS", inStock: true },
+  { name: "S", inStock: true },
+  { name: "M", inStock: true },
+  { name: "L", inStock: true },
+  { name: "XL", inStock: true },
+  { name: "2XL", inStock: true },
+  { name: "3XL", inStock: true },
 ];
-const highlights= [
-  'Hand cut and sewn locally',
-  'Dyed with our proprietary colors',
-  'Pre-washed & pre-shrunk',
-  'Ultra-soft 100% cotton',
-]
+const highlights = [
+  "Hand cut and sewn locally",
+  "Dyed with our proprietary colors",
+  "Pre-washed & pre-shrunk",
+  "Ultra-soft 100% cotton",
+];
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
@@ -37,72 +37,36 @@ export default function ProductDeatails() {
   // TODO: in server data we will add color size highlight
   const [selectedColor, setSelectedColor] = useState(colors[0]);
   const [selectedSize, setSelectedSize] = useState(sizes[2]);
-  const product = useSelector(selectProductById); // here when I refresh the page then the value of selectedProduct become null in store.state even
-  //   after going back to the main page the value still remain null and prodcutDetail component doesn't render but when using 
-  // static value of product, component rendered even the value of selectedProduct keep on updating in store.state 
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const user = useSelector(selectLoggedInUser);
+  const product = useSelector(selectProductById);
   const dispatch = useDispatch();
   const params = useParams();
-  const id = params.id
-  console.log(params)
-  //  const product = [{
-  //   "id": 11,
-  //   "title": "Annibale Colombo Bed",
-  //   "description": "The Annibale Colombo Bed is a luxurious and elegant bed frame, crafted with high-quality materials for a comfortable and stylish bedroom.",
-  //   "category": "furniture",
-  //   "price": 1899.99,
-  //   "discountPercentage": 0.29,
-  //   "rating": 4.14,
-  //   "stock": 47,
-  //   "tags": ["furniture", "beds"],
-  //   "brand": "Annibale Colombo",
-  //   "sku": "4KMDTZWF",
-  //   "weight": 3,
-  //   "dimensions": { "width": 28.75, "height": 26.88, "depth": 24.47 },
-  //   "warrantyInformation": "2 year warranty",
-  //   "shippingInformation": "Ships overnight",
-  //   "availabilityStatus": "In Stock",
-  //   "reviews": [
-  //     {
-  //       "rating": 4,
-  //       "comment": "Great value for money!",
-  //       "date": "2024-05-23T08:56:21.620Z",
-  //       "reviewerName": "Julian Newton",
-  //       "reviewerEmail": "julian.newton@x.dummyjson.com"
-  //     },
-  //     {
-  //       "rating": 5,
-  //       "comment": "Would buy again!",
-  //       "date": "2024-05-23T08:56:21.620Z",
-  //       "reviewerName": "Madison Collins",
-  //       "reviewerEmail": "madison.collins@x.dummyjson.com"
-  //     },
-  //     {
-  //       "rating": 4,
-  //       "comment": "Would buy again!",
-  //       "date": "2024-05-23T08:56:21.620Z",
-  //       "reviewerName": "Clara Berry",
-  //       "reviewerEmail": "clara.berry@x.dummyjson.com"
-  //     }
-  //   ],
-  //   "returnPolicy": "7 days return policy",
-  //   "minimumOrderQuantity": 1,
-  //   "meta": {
-  //     "createdAt": "2024-05-23T08:56:21.620Z",
-  //     "updatedAt": "2024-05-23T08:56:21.620Z",
-  //     "barcode": "7113807059215",
-  //     "qrCode": "https://assets.dummyjson.com/public/qr-code.png"
-  //   },
-  //   "images": [
-  //     "https://cdn.dummyjson.com/products/images/furniture/Annibale%20Colombo%20Bed/1.png",
-  //     "https://cdn.dummyjson.com/products/images/furniture/Annibale%20Colombo%20Bed/2.png",
-  //     "https://cdn.dummyjson.com/products/images/furniture/Annibale%20Colombo%20Bed/3.png"
-  //   ],
-  //   "thumbnail": "https://cdn.dummyjson.com/products/images/furniture/Annibale%20Colombo%20Bed/thumbnail.png"
-  // }]
- 
+  const id = params.id;
+
+  function addToCartHandler(e) {
+    e.preventDefault();
+    dispatch(addToCartAsync({ ...product, quantity: 1, user: user.id }));
+  }
+
   useEffect(() => {
-    dispatch(fetchProductByIdAsync(id));
-  }, [dispatch,params.id]);
+    const fetchProduct = async () => {
+      try {
+        setLoading(true);
+        dispatch(fetchProductByIdAsync(id));
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProduct();
+  }, [dispatch, id]);
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
+  if (!product) return <div>Product not found</div>;
 
   return (
     <div className="bg-white">
@@ -115,7 +79,7 @@ export default function ProductDeatails() {
             <li>
               <div className="flex items-center">
                 <a className="mr-2 text-sm font-medium text-gray-900">
-                  {product[0].category}
+                  {product.category}
                 </a>
                 <svg
                   fill="currentColor"
@@ -134,7 +98,7 @@ export default function ProductDeatails() {
                 aria-current="page"
                 className="font-medium text-gray-500 hover:text-gray-600"
               >
-                {product[0].title}
+                {product.title}
               </a>
             </li>
           </ol>
@@ -143,25 +107,25 @@ export default function ProductDeatails() {
         {/* Image gallery */}
         <div className="mx-auto mt-6 max-w-2xl sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-3 lg:gap-x-8 lg:px-8">
           <img
-            alt={product[0].title}
-            src={product[0].images[0] || product[0].thumbnail}
+            alt={product.title}
+            src={product.images[0] || product.thumbnail}
             className="hidden aspect-[3/4] size-full rounded-lg object-cover lg:block"
           />
           <div className="hidden lg:grid lg:grid-cols-1 lg:gap-y-8">
             <img
-              alt={product[0].title}
-              src={product[0].images[1] || product[0].thumbnail}
+              alt={product.title}
+              src={product.images[1] || product.thumbnail}
               className="aspect-[3/2] size-full rounded-lg object-cover"
             />
             <img
-              alt={product[0].title}
-              src={product[0].images[2] || product[0].thumbnail}
+              alt={product.title}
+              src={product.images[2] || product.thumbnail}
               className="aspect-[3/2] size-full rounded-lg object-cover"
             />
           </div>
           <img
-            alt={product[0].title}
-            src={product[0].images[3] || product[0].thumbnail}
+            alt={product.title}
+            src={product.images[3] || product.thumbnail}
             className="aspect-[4/5] size-full object-cover sm:rounded-lg lg:aspect-[3/4]"
           />
         </div>
@@ -178,14 +142,14 @@ export default function ProductDeatails() {
           <div className="mt-4 lg:row-span-3 lg:mt-0">
             <h2 className="sr-only">Product information</h2>
             <p className="text-3xl tracking-tight text-gray-900">
-              ${product[0].price}
+              ${product.price}
             </p>
 
             {/* Reviews */}
             <div className="mt-6">
               <h3 className="sr-only">Reviews</h3>
               <div className="flex items-center">
-                <p className="mr-2 text-sm text-gray-800">{product[0].rating} </p>
+                <p className="mr-2 text-sm text-gray-800">{product.rating} </p>
                 <div className="flex items-center">
                   {[0, 1, 2, 3, 4].map((rating) => (
                     <StarIcon
@@ -205,7 +169,7 @@ export default function ProductDeatails() {
                   href={reviews.href}
                   className="ml-3 text-sm font-medium text-indigo-600 hover:text-indigo-500"
                 >
-                  {product[0].reviews.length} reviews
+                  {product.reviews.length} reviews
                 </a>
               </div>
             </div>
@@ -309,6 +273,7 @@ export default function ProductDeatails() {
 
               <Link to="/cart">
                 <button
+                  onClick={addToCartHandler}
                   type="submit"
                   className="mt-10 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                 >
@@ -324,7 +289,7 @@ export default function ProductDeatails() {
               <h3 className="sr-only">Description</h3>
 
               <div className="space-y-6">
-                <p className="text-base text-gray-900">{product[0].description}</p>
+                <p className="text-base text-gray-900">{product.description}</p>
               </div>
             </div>
 
@@ -346,7 +311,7 @@ export default function ProductDeatails() {
               <h2 className="text-sm font-medium text-gray-900">Details</h2>
 
               <div className="mt-4 space-y-6">
-                <p className="text-sm text-gray-600">{product[0].description}</p>
+                <p className="text-sm text-gray-600">{product.description}</p>
               </div>
             </div>
           </div>

@@ -58,6 +58,7 @@ export const fetchProductByIdAsync = createAsyncThunk(
     const response = await fetchProductById(id);
     // The value we return becomes the `fulfilled` action payload
     console.log(response);
+    console.log(response.data)
     return response.data;
   }
 );
