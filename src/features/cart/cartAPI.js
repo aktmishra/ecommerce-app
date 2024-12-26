@@ -15,7 +15,40 @@ export function addToCart(item) {
 export function fetchCartItemsByUserId(userId) {
   return new Promise(async (resolve) => {
     const response = await fetch("http://localhost:8080/cart?user=" + userId);
-    const data = response.json();
+    const data = await response.json();
     resolve({ data });
+  });
+}
+
+export function updateProductQuantity(productObject) {
+  return new Promise(async (resolve) => {
+    const response = await fetch(
+      "http://localhost:8080/cart/" + productObject.id,
+      {
+        method: "PATCH",
+        body: JSON.stringify(productObject),
+        headers: {
+          "content-type": "application/json",
+        },
+      }
+    );
+    const data = await response.json();
+    console.log(data);
+    resolve({ data });
+  });
+}
+
+export function removeProductFromCart(productId) {
+  return new Promise(async (resolve) => {
+    const response = fetch("http://localhost:8080/cart/" + productId, {
+      method: "DELETE",
+      headers: {
+        "content-type": "application/json",
+      },
+    });
+    
+    // const data = await response.json(); // here data is undefined
+    // console.log(data); // undefined
+    resolve({ data: { id: productId } });
   });
 }

@@ -1,14 +1,31 @@
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 // import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router";
-import { selectItems } from "./cartSlice";
- 
+import {
+  removeProductFromCartAsync,
+  selectItems,
+  updateProductQuantityAsync,
+} from "./cartSlice";
 
 export default function Cart() {
   const items = useSelector(selectItems);
- const totalAmount = items.reduce((amount, item)=>item.price*item.quantity+amount, 0);
- const totalItem = items.reduce((total, items)=>items.quantity+total, 0)
+  const dispatch = useDispatch();
+  const totalAmount = Math.round(items.reduce(
+    (amount, item) => item.price * item.quantity + amount,
+    0
+  ));
+  const totalItem = items.reduce((total, item) => item.quantity + total, 0);
+
+  function quantityHandler(e, product) {
+    dispatch(
+      updateProductQuantityAsync({ ...product, quantity: +e.target.value })
+    );
+  }
+
+  function removeProductHandler(id) {
+    dispatch(removeProductFromCartAsync(id));
+  }
 
   return (
     <div className="mt-8 mx-auto max-w-[80%] px-4 sm:px-6 lg:px-20 bg-white">
@@ -54,18 +71,23 @@ export default function Cart() {
                         Qty.
                       </label>
                       <select
+                        onChange={(e) => quantityHandler(e, product)}
                         name=""
                         id="Qty"
                         className="border-gray-200 border-2"
+                        value={product.quantity}
                       >
                         <option value="1">1</option>
                         <option value="2">2</option>
                         <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
                       </select>
                     </div>
 
                     <div className="flex">
                       <button
+                        onClick={() => removeProductHandler(product.id)}
                         type="button"
                         className="font-medium text-indigo-600 hover:text-indigo-500"
                       >
@@ -81,9 +103,9 @@ export default function Cart() {
       </div>
 
       <div className="border-t border-gray-200 mt-8 px-4 py-6 sm:px-6">
-      <div className="flex justify-between text-base font-medium text-gray-900">
+        <div className="flex justify-between text-base font-medium text-gray-900">
           <p>Total Items in Cart</p>
-          <p>${totalItem}</p>
+          <p>{totalItem}</p>
         </div>
         <div className="flex justify-between text-base font-medium text-gray-900">
           <p>Subtotal</p>
@@ -93,11 +115,12 @@ export default function Cart() {
           Shipping and taxes calculated at checkout.
         </p>
         <div className="mt-6">
-           
-            <Link to="/checkout" className="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700">
-              Checkout
-            </Link>
-         
+          <Link
+            to="/checkout"
+            className="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
+          >
+            Checkout
+          </Link>
         </div>
         <div className="mt-6 flex justify-center text-center text-sm text-gray-500">
           <p>
