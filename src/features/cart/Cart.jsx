@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 // import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router";
@@ -11,10 +11,9 @@ import {
 export default function Cart() {
   const items = useSelector(selectItems);
   const dispatch = useDispatch();
-  const totalAmount = Math.round(items.reduce(
-    (amount, item) => item.price * item.quantity + amount,
-    0
-  ));
+  const totalAmount = Math.round(
+    items.reduce((amount, item) => item.price * item.quantity + amount, 0)
+  );
   const totalItem = items.reduce((total, item) => item.quantity + total, 0);
 
   function quantityHandler(e, product) {
@@ -26,7 +25,23 @@ export default function Cart() {
   function removeProductHandler(id) {
     dispatch(removeProductFromCartAsync(id));
   }
-
+  if (items.length === 0) {
+    return (
+      <div className="flex flex-col gap-5 items-center min-h-screen justify-center">
+        <p className="font-extrabold text-3xl text-gray-900">Empty Cart</p>
+        <div>Please Buy Something</div>
+        <Link to="/">
+          <button
+            type="button"
+            className="font-medium text-indigo-500 hover:text-indigo-700 border-2 hover:border-indigo-700 border-indigo-500 rounded-md py-2 px-4"
+          >
+             Shopping
+            <span aria-hidden="true"> &rarr;</span>
+          </button>
+        </Link>
+      </div>
+    );
+  }
   return (
     <div className="mt-8 mx-auto max-w-[80%] px-4 sm:px-6 lg:px-20 bg-white">
       <div className="pt-12">
