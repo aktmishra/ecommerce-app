@@ -40,14 +40,39 @@ export default function Signup() {
               onSubmit={handleSubmit((userData) => {
                 dispatch(
                   createUserAsync({
+                    fullName: userData.fullName,
                     email: userData.email,
                     password: userData.password,
+                    addresses:[]
                   })
                 );
+                reset()
 
                 console.log(userData);
               })}
             >
+              <div className="sm:col-span-4">
+                <label
+                  htmlFor="full-name"
+                  className="block text-sm/6 font-medium text-gray-900"
+                >
+                  Full Name
+                </label>
+                <div className="mt-2">
+                  <input
+                    id="full-name"
+                    type="text"
+                    {...register("fullName", {
+                      required: "Full Name is required",
+                    })}
+                    autoComplete="given-name"
+                    className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+                  />
+                  {errors.fullName && (
+                    <p className="text-red-500">{errors.fullName}</p>
+                  )}
+                </div>
+              </div>
               <div>
                 <label
                   htmlFor="email"

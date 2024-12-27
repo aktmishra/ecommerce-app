@@ -19,7 +19,8 @@
     "react-hook-form": "^7.54.2",
     "react-redux": "^9.1.2",
     "react-router": "^7.0.1",
-    "react-router-dom": "^7.0.1"
+    "react-router-dom": "^7.0.1",
+    "react-select": "^5.9.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.15.0",
