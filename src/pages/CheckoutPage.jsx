@@ -23,10 +23,11 @@ function CheckoutPage() {
     register,
     handleSubmit,
     watch,
+    reset,
     formState: { errors },
   } = useForm();
   const [selectedAddress, setSelectedAddress] = useState(null);
-  const [paymentMethod, setPaymentMethod] = useState("cash");
+  const [paymentMethod, setPaymentMethod] = useState(null);
   const dispatch = useDispatch();
   const totalAmount = Math.round(
     items.reduce((amount, item) => item.price * item.quantity + amount, 0)
@@ -44,42 +45,56 @@ function CheckoutPage() {
   }
 
   function addressHandler(e) {
-    console.log(e.target.value)
+    console.log(e.target.value);
     setSelectedAddress(user.addresses[e.target.value]);
   }
 
   function paymentHandler(e) {
-    console.log(e.target.value)
+    console.log(e.target.value);
     setPaymentMethod(e.target.value);
   }
-  
-  function orderHandler(){
-    const order = {items,user, selectedAddress, totalAmount, totalItem, paymentMethod};
-    dispatch(createOrderAsync(order))
+
+  function orderHandler() {
+    if (selectedAddress && paymentMethod) {
+      const order = {
+        items,
+        user,
+        selectedAddress,
+        totalAmount,
+        totalItem,
+        paymentMethod,
+      };
+      dispatch(createOrderAsync(order));
+    } else {
+      alert("Enter Address and Payment Method");
+    }
     //TODO : Redirect to order-success page
     //TODO : clear cart after order
     //TODO : on server change the stock number of items
   }
+
+  function onSubmit(data) {
+    console.log(data);
+    dispatch(
+      updateUserAsync({
+        ...user,
+        addresses: [...user.addresses, data],
+      })
+    );
+    reset();
+  }
+
   return (
     <>
       {items.length === 0 && <Navigate to="/" replace={true}></Navigate>}
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-5">
-          {/* left side  start*/}
+        <div className="grid grid-cols-1 gap-x-5 gap-y-2 lg:grid-cols-5">
+          {/* This form is for address*/}
 
           <div className="  lg:col-span-3 ">
             <form
               noValidate
-              onSubmit={handleSubmit((data) => {
-                console.log(data);
-                dispatch(
-                  updateUserAsync({
-                    ...user,
-                    addresses: [...user.addresses, data],
-                  })
-                );
-                reset();
-              })}
+              onSubmit={handleSubmit(onSubmit)}
               className="px-8 py-5 my-12 bg-white"
             >
               <div>
@@ -111,7 +126,9 @@ function CheckoutPage() {
                           className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
                         />
                         {errors.fullName && (
-                          <p className="text-red-500">{errors.fullName}</p>
+                          <p className="text-red-500">
+                            {errors.fullName.message}
+                          </p>
                         )}
                       </div>
                     </div>
@@ -164,6 +181,9 @@ function CheckoutPage() {
                           autoComplete="phone"
                           className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
                         />
+                        {errors.phone && (
+                          <p className="text-red-500">{errors.phone.message}</p>
+                        )}
                       </div>
                     </div>
 
@@ -193,6 +213,11 @@ function CheckoutPage() {
                           aria-hidden="true"
                           className="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-500 sm:size-4"
                         />
+                        {errors.country && (
+                          <p className="text-red-500">
+                            {errors.country.message}
+                          </p>
+                        )}
                       </div>
                     </div>
 
@@ -214,6 +239,11 @@ function CheckoutPage() {
                           autoComplete="streetAddress"
                           className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
                         />
+                        {errors.streetAddress && (
+                          <p className="text-red-500">
+                            {errors.streetAddress.message}
+                          </p>
+                        )}
                       </div>
                     </div>
 
@@ -234,6 +264,9 @@ function CheckoutPage() {
                           autoComplete="address-level2"
                           className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
                         />
+                        {errors.city && (
+                          <p className="text-red-500">{errors.city.message}</p>
+                        )}
                       </div>
                     </div>
 
@@ -254,6 +287,9 @@ function CheckoutPage() {
                           autoComplete="address-level1"
                           className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
                         />
+                        {errors.state && (
+                          <p className="text-red-500">{errors.state.message}</p>
+                        )}
                       </div>
                     </div>
 
@@ -266,7 +302,7 @@ function CheckoutPage() {
                       </label>
                       <div className="mt-2">
                         <input
-                          id="postal-code"
+                          id="zipCode"
                           {...register("zipCode", {
                             required: "Zip Code is Required",
                           })}
@@ -274,6 +310,11 @@ function CheckoutPage() {
                           autoComplete="zipCode"
                           className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
                         />
+                        {errors.zipCode && (
+                          <p className="text-red-500">
+                            {errors.zipCode.message}
+                          </p>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -295,14 +336,14 @@ function CheckoutPage() {
                   </button>
                 </div>
                 {/* Saved Addresses  */}
-                <div className="border-b border-gray-900/10 pb-12">
+                <div className="border-b border-gray-900/10 pb-0">
                   <div className="space-y-5">
                     <fieldset>
                       <legend className="text-sm/6 font-semibold text-gray-900">
                         Address
                       </legend>
                       <p className="mt-1 text-sm/6 text-gray-600">
-                        Choose existing address.
+                        Choose one existing address.
                       </p>
                       <div className="mt-4 space-y-4">
                         <div className="flex items-center gap-x-3">
@@ -313,7 +354,7 @@ function CheckoutPage() {
                                 className="flex  gap-x-6 py-5 items-center justify-center"
                               >
                                 <input
-                                  onChange={e=>addressHandler(e)} 
+                                  onChange={(e) => addressHandler(e)}
                                   id={index}
                                   name="address"
                                   type="radio"
@@ -368,7 +409,7 @@ function CheckoutPage() {
                   </div>
                 </div>
                 {/* Payment Mode */}
-                <div className="border-b border-gray-900/10 pb-12">
+                <div className="border-b border-gray-900/10 pb-4">
                   <div className="mt-5 space-y-10">
                     <fieldset>
                       <legend className="text-sm/6 font-semibold text-gray-900">
@@ -380,12 +421,12 @@ function CheckoutPage() {
                       <div className="mt-4 space-y-4">
                         <div className="flex items-center gap-x-3">
                           <input
-                             value="cash"
+                            value="cash"
                             id="cash"
                             name="payment-mode"
                             type="radio"
                             onChange={paymentHandler}
-                            checked={paymentMethod==="cash"}
+                            checked={paymentMethod === "cash"}
                             className="relative size-4 appearance-none rounded-full border border-gray-300 bg-white before:absolute before:inset-1 before:rounded-full before:bg-white checked:border-indigo-600 checked:bg-indigo-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:before:bg-gray-400 forced-colors:appearance-auto forced-colors:before:hidden [&:not(:checked)]:before:hidden"
                           />
                           <label
@@ -402,7 +443,7 @@ function CheckoutPage() {
                             name="payment-mode"
                             type="radio"
                             onChange={paymentHandler}
-                            checked={paymentMethod==="card"}
+                            checked={paymentMethod === "card"}
                             className="relative size-4 appearance-none rounded-full border border-gray-300 bg-white before:absolute before:inset-1 before:rounded-full before:bg-white checked:border-indigo-600 checked:bg-indigo-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:before:bg-gray-400 forced-colors:appearance-auto forced-colors:before:hidden [&:not(:checked)]:before:hidden"
                           />
                           <label
