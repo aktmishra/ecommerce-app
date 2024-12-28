@@ -46,9 +46,20 @@ export function removeProductFromCart(productId) {
         "content-type": "application/json",
       },
     });
-    
+
     // const data = await response.json(); // here data is undefined
     // console.log(data); // undefined
     resolve({ data: { id: productId } });
+  });
+}
+
+export function resetCart(userId) {
+  return new Promise(async (resolve) => {
+    const response = await fetchCartItemsByUserId(userId);
+    const items = response.data;
+    for (const item of items) {
+      await removeProductFromCart(item.id);
+    }
+    resolve({ status: "success" });
   });
 }
