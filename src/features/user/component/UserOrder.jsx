@@ -1,12 +1,12 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchLoggedInUserOrderAsync, selectUserOrders } from "../userSlice";
-import { selectLoggedInUser } from "../../auth/authSlice";
+import { fetchLoggedInUserOrderAsync, selectUserCompleteInfo, selectUserOrders } from "../userSlice";
+ 
 import { Link } from "react-router";
 
 function UserOrder() {
   const orders = useSelector(selectUserOrders);
-  const user = useSelector(selectLoggedInUser);
+  const user = useSelector(selectUserCompleteInfo);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -38,12 +38,12 @@ function UserOrder() {
           key={index}
           className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 bg-white mt-5"
         >
-          <div className="pt-10">
-            <h1 className=" text-4xl font-bold tracking-tight text-gray-900">
+          <div className="pt-8">
+            <h1 className=" text-2xl font-bold tracking-tight text-gray-700">
               Order Id # {order.id}
             </h1>
           </div>
-          <div className="mt-8 px-4 max-sm:px-0 ">
+          <div className="mt-3 px-4 max-sm:px-0 ">
             <div className="flow-root">
               <ul
                 role="list"

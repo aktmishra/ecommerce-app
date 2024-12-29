@@ -3,11 +3,11 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { Link, useParams } from "react-router";
 import { resetCartAsync } from "../features/cart/cartSlice";
-import { selectLoggedInUser } from "../features/auth/authSlice";
 import { currentOrderReset } from "../features/order/orderSlice";
+import { selectUserCompleteInfo } from "../features/user/userSlice";
 
 function OrderSuccessPage() {
-  const user = useSelector(selectLoggedInUser);
+  const user = useSelector(selectUserCompleteInfo);
   const params = useParams();
   const id = params?.id;
   const dispatch = useDispatch();

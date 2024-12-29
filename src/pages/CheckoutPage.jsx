@@ -10,24 +10,23 @@ import {
   updateProductQuantityAsync,
 } from "../features/cart/cartSlice";
 import { useForm } from "react-hook-form";
-import {
-  selectLoggedInUser,
-  updateUserAsync,
-  userSlice,
-} from "../features/auth/authSlice";
+
 import {
   createOrderAsync,
   selectCurrentOrder,
 } from "../features/order/orderSlice";
+import {
+  selectUserCompleteInfo,
+  updateUserAsync,
+} from "../features/user/userSlice";
 
 function CheckoutPage() {
   const items = useSelector(selectItems);
-  const user = useSelector(selectLoggedInUser);
+  const user = useSelector(selectUserCompleteInfo);
   const currentOrder = useSelector(selectCurrentOrder);
   const {
     register,
     handleSubmit,
-    watch,
     reset,
     formState: { errors },
   } = useForm();
@@ -349,7 +348,7 @@ function CheckoutPage() {
                   </button>
                 </div>
                 {/* Saved Addresses  */}
-                {user.addresses.length>0 && (
+                {user.addresses.length > 0 && (
                   <div className="border-b border-gray-900/10 pb-0">
                     <div className="space-y-5">
                       <fieldset>

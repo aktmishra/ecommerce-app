@@ -15,6 +15,7 @@ import { fetchCartItemsByUserIdAsync } from "./features/cart/cartSlice";
 import PageNotFound from "./pages/PageNotFound";
 import OrderSuccessPage from "./pages/OrderSuccesPage";
 import UserOrderPage from "./pages/UserOrderPage";
+import { fetchLoggedInUserDetailsAsync, selectUserCompleteInfo } from "./features/user/userSlice";
 
 const router = createBrowserRouter([
   {
@@ -87,6 +88,7 @@ function App() {
   useEffect(() => {
     if (user) {
       dispatch(fetchCartItemsByUserIdAsync(user.id));
+      dispatch(fetchLoggedInUserDetailsAsync(user.id))
     }
   }, [dispatch, user]);
 
