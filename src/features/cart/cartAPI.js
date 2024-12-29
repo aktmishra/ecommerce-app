@@ -40,7 +40,7 @@ export function updateProductQuantity(productObject) {
 
 export function removeProductFromCart(productId) {
   return new Promise(async (resolve) => {
-    const response = fetch("http://localhost:8080/cart/" + productId, {
+    const response = await fetch("http://localhost:8080/cart/" + productId, {
       method: "DELETE",
       headers: {
         "content-type": "application/json",
@@ -48,17 +48,18 @@ export function removeProductFromCart(productId) {
     });
 
     // const data = await response.json(); // here data is undefined
-    // console.log(data); // undefined
+    console.log(response); // undefined
     resolve({ data: { id: productId } });
   });
 }
 
 export function resetCart(userId) {
+  // get all items of user's cart - and then delete each
   return new Promise(async (resolve) => {
     const response = await fetchCartItemsByUserId(userId);
     const items = response.data;
-    for (const item of items) {
-      await removeProductFromCart(item.id);
+    for (let item of items) {
+      await  removeProductFromCart(item.id);
     }
     resolve({ status: "success" });
   });

@@ -8,7 +8,7 @@ const initialState = {
 };
 
 export const createUserAsync = createAsyncThunk(
-  "user/createUser",
+  "auth/createUser",
   async (userData) => {
     const response = await createUser(userData);
     // The value we return becomes the `fulfilled` action payload
@@ -17,7 +17,7 @@ export const createUserAsync = createAsyncThunk(
   }
 );
 export const fetchUserAsync = createAsyncThunk(
-  "user/fetchUser",
+  "auth/fetchUser",
   async (loginInfo) => {
     const response = await fetchUser(loginInfo);
     // The value we return becomes the `fulfilled` action payload
@@ -27,7 +27,7 @@ export const fetchUserAsync = createAsyncThunk(
 );
 
 export const updateUserAsync = createAsyncThunk(
-  "user/updateUser",
+  "auth/updateUser",
   async (update) => {
     const response = await updateUser(update)
     console.log(response);
@@ -36,7 +36,7 @@ export const updateUserAsync = createAsyncThunk(
 );
 
 export const userSlice = createSlice({
-  name: "user",
+  name: "auth",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
@@ -70,7 +70,7 @@ export const userSlice = createSlice({
 
 export const {} = userSlice.actions;
 
-export const selectLoggedInUser = (state) => state.user.loggedInUser;
-export const selectError = (state) => state.user.error;
+export const selectLoggedInUser = (state) => state.auth.loggedInUser;
+export const selectError = (state) => state.auth.error;
 
 export default userSlice.reducer;

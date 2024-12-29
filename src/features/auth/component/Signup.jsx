@@ -12,6 +12,7 @@ export default function Signup() {
     register,
     handleSubmit,
     watch,
+    reset,
     formState: { errors },
   } = useForm();
 
@@ -43,10 +44,10 @@ export default function Signup() {
                     fullName: userData.fullName,
                     email: userData.email,
                     password: userData.password,
-                    addresses:[]
+                    addresses: [],
                   })
                 );
-                reset()
+                reset();
 
                 console.log(userData);
               })}
@@ -69,7 +70,7 @@ export default function Signup() {
                     className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
                   />
                   {errors.fullName && (
-                    <p className="text-red-500">{errors.fullName}</p>
+                    <p className="text-red-500">{errors.fullName.message}</p>
                   )}
                 </div>
               </div>
@@ -117,26 +118,24 @@ export default function Signup() {
                       pattern: {
                         value:
                           /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/gm,
-                        message: [
-                          "- At least 8 characters",
-                          "- Must contain at least 1 uppercase letter, 1 lowercase letter, and 1 number",
-                          "- Can contain special characters",
-                        ],
+                        message: 
+                          `- At least 8 characters,
+                          - \nMust contain at least 1 uppercase letter, 1 lowercase letter, and 1 number",
+                           - \nCan contain special characters`,
+                        
                       },
                     })}
                     className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
                   />
-                  {errors.password &&
-                    errors.password.message.map((message, id) => {
-                      return (
-                        <p
-                          key={id}
-                          className="text-red-500 text-sm leading-tight text-wrap"
-                        >
-                          {message}
-                        </p>
-                      );
-                    })}
+                  {errors.password && (
+                    <p
+                      className="text-red-500 text-sm leading-tight text-wrap"
+                      role="alert"
+                      aria-live="assertive"
+                    >
+                      {errors.password.message}
+                    </p>
+                  )}
                 </div>
               </div>
 

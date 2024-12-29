@@ -93,6 +93,13 @@ function CheckoutPage() {
   return (
     <>
       {items.length === 0 && <Navigate to="/" replace={true}></Navigate>}
+      {!items.length && <Navigate to="/" replace={true}></Navigate>}
+      {currentOrder && (
+        <Navigate
+          to={`/order-success/${currentOrder.id}`}
+          replace={true}
+        ></Navigate>
+      )}
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 gap-x-5 gap-y-2 lg:grid-cols-5">
           {/* This form is for address*/}
@@ -342,78 +349,83 @@ function CheckoutPage() {
                   </button>
                 </div>
                 {/* Saved Addresses  */}
-                <div className="border-b border-gray-900/10 pb-0">
-                  <div className="space-y-5">
-                    <fieldset>
-                      <legend className="text-sm/6 font-semibold text-gray-900">
-                        Address
-                      </legend>
-                      <p className="mt-1 text-sm/6 text-gray-600">
-                        Choose one existing address.
-                      </p>
-                      <div className="mt-4 space-y-4">
-                        <div className="flex items-center gap-x-3">
-                          <ul role="list" className="divide-y divide-gray-100">
-                            {user.addresses.map((address, index) => (
-                              <li
-                                key={index}
-                                className="flex  gap-x-6 py-5 items-center justify-center"
-                              >
-                                <input
-                                  onChange={(e) => addressHandler(e)}
-                                  id={index}
-                                  name="address"
-                                  type="radio"
-                                  value={index}
-                                  className="relative size-4 appearance-none rounded-full border border-gray-300 bg-white before:absolute before:inset-1 before:rounded-full before:bg-white checked:border-indigo-600 checked:bg-indigo-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:before:bg-gray-400 forced-colors:appearance-auto forced-colors:before:hidden [&:not(:checked)]:before:hidden"
-                                />
-                                <label
-                                  htmlFor={address.email}
-                                  className="flex gap-x-48 py-5 flex-wrap"
+                {user.addresses.length>0 && (
+                  <div className="border-b border-gray-900/10 pb-0">
+                    <div className="space-y-5">
+                      <fieldset>
+                        <legend className="text-sm/6 font-semibold text-gray-900">
+                          Address
+                        </legend>
+                        <p className="mt-1 text-sm/6 text-gray-600">
+                          Choose one existing address.
+                        </p>
+                        <div className="mt-4 space-y-4">
+                          <div className="flex items-center gap-x-3">
+                            <ul
+                              role="list"
+                              className="divide-y divide-gray-100"
+                            >
+                              {user.addresses.map((address, index) => (
+                                <li
+                                  key={index}
+                                  className="flex  gap-x-6 py-5 items-center justify-center"
                                 >
-                                  <div className="flex min-w-0 gap-x-4 ">
-                                    <div className="min-w-0 flex-auto">
-                                      <p className="text-sm/6 font-semibold text-gray-900">
-                                        {address.fullName}
-                                      </p>
-                                      <p className="mt-1 truncate text-xs/5 text-gray-500">
-                                        {address.email}
-                                      </p>
-                                      <p className="text-sm/6 text-gray-900">
-                                        {address.phone}
-                                      </p>
+                                  <input
+                                    onChange={(e) => addressHandler(e)}
+                                    id={index}
+                                    name="address"
+                                    type="radio"
+                                    value={index}
+                                    className="relative size-4 appearance-none rounded-full border border-gray-300 bg-white before:absolute before:inset-1 before:rounded-full before:bg-white checked:border-indigo-600 checked:bg-indigo-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:before:bg-gray-400 forced-colors:appearance-auto forced-colors:before:hidden [&:not(:checked)]:before:hidden"
+                                  />
+                                  <label
+                                    htmlFor={address.email}
+                                    className="flex gap-x-48 py-5 flex-wrap"
+                                  >
+                                    <div className="flex min-w-0 gap-x-4 ">
+                                      <div className="min-w-0 flex-auto">
+                                        <p className="text-sm/6 font-semibold text-gray-900">
+                                          {address.fullName}
+                                        </p>
+                                        <p className="mt-1 truncate text-xs/5 text-gray-500">
+                                          {address.email}
+                                        </p>
+                                        <p className="text-sm/6 text-gray-900">
+                                          {address.phone}
+                                        </p>
+                                      </div>
                                     </div>
-                                  </div>
-                                  <div className=" shrink-0 sm:flex sm:flex-col sm:items-start">
-                                    <p className="text-sm/6 text-gray-900">
-                                      {address.streetAddress}
-                                    </p>
-                                    <div className="flex gap-2">
+                                    <div className=" shrink-0 sm:flex sm:flex-col sm:items-start">
                                       <p className="text-sm/6 text-gray-900">
-                                        {address.city}
+                                        {address.streetAddress}
                                       </p>
-                                      <p className="text-sm/6 text-gray-900">
-                                        {address.state}
-                                      </p>
+                                      <div className="flex gap-2">
+                                        <p className="text-sm/6 text-gray-900">
+                                          {address.city}
+                                        </p>
+                                        <p className="text-sm/6 text-gray-900">
+                                          {address.state}
+                                        </p>
+                                      </div>
+                                      <div className="flex gap-2">
+                                        <p className="text-sm/6 text-gray-900">
+                                          {address.zipCode}
+                                        </p>
+                                        <p className="text-sm/6 text-gray-900">
+                                          {address.country}
+                                        </p>
+                                      </div>
                                     </div>
-                                    <div className="flex gap-2">
-                                      <p className="text-sm/6 text-gray-900">
-                                        {address.zipCode}
-                                      </p>
-                                      <p className="text-sm/6 text-gray-900">
-                                        {address.country}
-                                      </p>
-                                    </div>
-                                  </div>
-                                </label>
-                              </li>
-                            ))}
-                          </ul>
+                                  </label>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
                         </div>
-                      </div>
-                    </fieldset>
+                      </fieldset>
+                    </div>
                   </div>
-                </div>
+                )}
                 {/* Payment Mode */}
                 <div className="border-b border-gray-900/10 pb-4">
                   <div className="mt-5 space-y-10">
@@ -470,13 +482,6 @@ function CheckoutPage() {
 
           {/* right side start here*/}
 
-          {!items.length && <Navigate to="/" replace={true}></Navigate>}
-          {currentOrder && (
-            <Navigate
-              to={`/order-success/${currentOrder.id}`}
-              replace={true}
-            ></Navigate>
-          )}
           <div className="lg:col-span-2">
             <div className=" mx-auto my-12 max-w-7xl px-2  sm:px-3 lg:px-5 bg-white">
               <div className="pt-8">

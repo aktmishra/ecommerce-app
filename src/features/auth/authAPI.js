@@ -9,6 +9,7 @@ export function createUser(userData) {
     });
     const data = await response.json();
     resolve({ data });
+    alert("User Created Successfully")
   });
 }
 
@@ -18,7 +19,8 @@ export function fetchUser(loginInfo) {
   return new Promise(async (resolve, reject) => {
     const response = await fetch("http://localhost:8080/users?email=" + email);
     const data = await response.json();
-    if (data.length) {
+    console.log(data)
+    if (data.length>0) {
       if (password === data[0].password) {
         resolve({ data: data[0] });
       } else {
