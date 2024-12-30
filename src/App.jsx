@@ -15,8 +15,13 @@ import { fetchCartItemsByUserIdAsync } from "./features/cart/cartSlice";
 import PageNotFound from "./pages/PageNotFound";
 import OrderSuccessPage from "./pages/OrderSuccesPage";
 import UserOrderPage from "./pages/UserOrderPage";
-import { fetchLoggedInUserDetailsAsync, selectCompleteUserInfo } from "./features/user/userSlice";
+import {
+  fetchLoggedInUserDetailsAsync,
+  selectCompleteUserInfo,
+} from "./features/user/userSlice";
 import UserProfilePage from "./pages/UserProfilePage";
+import Logout from "./features/auth/component/Logout";
+import ForgetPasswordPage from "./pages/ForgetPasswordPage";
 
 const router = createBrowserRouter([
   {
@@ -72,7 +77,7 @@ const router = createBrowserRouter([
     path: "/orders",
     element: (
       <Protected>
-         <UserOrderPage></UserOrderPage>
+        <UserOrderPage></UserOrderPage>
       </Protected>
     ),
   },
@@ -80,13 +85,25 @@ const router = createBrowserRouter([
     path: "/profile",
     element: (
       <Protected>
-         <UserProfilePage></UserProfilePage>
+        <UserProfilePage></UserProfilePage>
       </Protected>
     ),
   },
   {
+    path: "/logout",
+    element: (
+      <Protected>
+        <Logout></Logout>
+      </Protected>
+    ),
+  },
+  {
+    path: "/forget-password",
+    element: <ForgetPasswordPage></ForgetPasswordPage>,
+  },
+  {
     path: "*",
-    element: <PageNotFound></PageNotFound>
+    element: <PageNotFound></PageNotFound>,
   },
 ]);
 
@@ -97,7 +114,7 @@ function App() {
   useEffect(() => {
     if (user) {
       dispatch(fetchCartItemsByUserIdAsync(user.id));
-      dispatch(fetchLoggedInUserDetailsAsync(user.id))
+      dispatch(fetchLoggedInUserDetailsAsync(user.id));
     }
   }, [dispatch, user]);
 

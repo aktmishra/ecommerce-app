@@ -2,7 +2,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, Navigate } from "react-router";
-import {   checkUserAsync, selectError, selectLoggedInUser } from "../authSlice";
+import { checkUserAsync, selectError, selectLoggedInUser } from "../authSlice";
 
 export default function Login() {
   const dispatch = useDispatch();
@@ -99,12 +99,12 @@ export default function Login() {
                   {error && <p className="text-red-500">{error.message}</p>}
                 </div>
                 <div className="text-sm text-right">
-                  <a
-                    href="#"
+                  <Link
+                    to="/forget-password"
                     className="font-semibold text-indigo-600 hover:text-indigo-500 text-sm text-"
                   >
                     Forgot password?
-                  </a>
+                  </Link>
                 </div>
               </div>
 

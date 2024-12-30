@@ -32,4 +32,8 @@ export function fetchUser(loginInfo) {
   });
 }
 
-
+export function logOut() {
+  return new Promise(async(resolve)=>{
+    resolve({data: "success"});
+  })
+}
