@@ -6274,23 +6274,23 @@
       "addresses": [
         {
           "fullName": "Ankit",
-          "email": "Ankit@gmail.com",
+          "email": "aktmishra72@gmail.com",
+          "phone": "+91965478900",
+          "country": "India",
+          "streetAddress": "x-153/6A ",
           "city": "Ayodhya",
           "state": "Uttar Pradesh",
-          "country": "Canada",
-          "zipCode": "0000000",
-          "phone": "+919654280284",
-          "streetAddress": "x 153 "
+          "zipCode": "110053"
         },
         {
-          "fullName": "Ankit",
-          "email": "Ankit@gmail.com",
+          "fullName": "Akt",
+          "email": "aktmishra72@gmail.com",
           "phone": "+919654280284",
           "country": "India",
-          "streetAddress": "x 153 ",
-          "city": "Ayodhya",
-          "state": "Uttar Pradesh",
-          "zipCode": "110053444444"
+          "streetAddress": "2222xyz",
+          "city": "Delhi",
+          "state": "Delhi",
+          "zipCode": "1111111"
         }
       ]
     },

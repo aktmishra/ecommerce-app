@@ -64,19 +64,21 @@ function UserProfile() {
           </h1>
           <p className=" text-sm/6 text-gray-600"> {userDetail.email}</p>
         </div>
-        <div>
-          {userDetail.addresses.length > 0 && (
+        {/* Address Section  */}
+        <section>
+          <div>
+            <button
+              type="button"
+              onClick={(e) => setShowAddAddressForm(true)}
+              className={`${
+                showAddAddressForm || showEditAddressForm ? "hidden" : "block"
+              } font-medium border-2 rounded-md border-green-700  text-white bg-green-700 text-sm px-5 py-2`}
+            >
+              Add Address
+            </button>
+
             <div className="border-b border-gray-900/10 pb-0">
               <div className="mt-4 ">
-                <button
-                  type="button"
-                  onClick={(e) => setShowAddAddressForm(true)}
-                  className={`${
-                    showAddAddressForm ? "hidden" : "block"
-                  } font-medium border-2 rounded-md border-green-700  text-white bg-green-700 text-sm px-5 py-2`}
-                >
-                  Add Address
-                </button>
                 {showAddAddressForm || showEditAddressForm ? (
                   <form
                     noValidate
@@ -333,6 +335,7 @@ function UserProfile() {
                           onClick={() => {
                             setShowAddAddressForm(false);
                             setEditShowAddressForm(false);
+                            reset();
                           }}
                           type="button"
                           className="font-medium border-2 rounded-md border-green-700  text-white bg-green-700 text-sm px-5 py-2"
@@ -359,73 +362,79 @@ function UserProfile() {
                       <p className="mt-1 text-sm/6 text-gray-600">
                         Saved Address.
                       </p>
-                      {userDetail.addresses.map((address, index) => (
-                        <li
-                          key={index}
-                          className="flex  gap-x-6 py-5 items-center justify-between border-t border-gray-300"
-                        >
-                          <div className="flex min-w-0 gap-x-4 ">
-                            <div className="min-w-0 flex-auto">
-                              <p className="text-sm/6 font-semibold text-gray-900">
-                                {address.fullName}
-                              </p>
-                              <p className="mt-1 truncate text-xs/5 text-gray-500">
-                                {address.email}
-                              </p>
-                              <p className="text-sm/6 text-gray-900">
-                                {address.phone}
-                              </p>
+                      {userDetail.addresses.length > 0 ? (
+                        userDetail.addresses.map((address, index) => (
+                          <li
+                            key={index}
+                            className="flex  gap-x-6 py-5 items-center justify-between border-t border-gray-300"
+                          >
+                            <div className="flex min-w-0 gap-x-4 ">
+                              <div className="min-w-0 flex-auto">
+                                <p className="text-sm/6 font-semibold text-gray-900">
+                                  {address.fullName}
+                                </p>
+                                <p className="mt-1 truncate text-xs/5 text-gray-500">
+                                  {address.email}
+                                </p>
+                                <p className="text-sm/6 text-gray-900">
+                                  {address.phone}
+                                </p>
+                              </div>
                             </div>
-                          </div>
-                          <div className=" shrink-0 sm:flex sm:flex-col sm:items-start">
-                            <p className="text-sm/6 text-gray-900">
-                              {address.streetAddress}
-                            </p>
-                            <div className="flex gap-2">
+                            <div className=" shrink-0 sm:flex sm:flex-col sm:items-start">
                               <p className="text-sm/6 text-gray-900">
-                                {address.city}
+                                {address.streetAddress}
                               </p>
-                              <p className="text-sm/6 text-gray-900">
-                                {address.state}
-                              </p>
+                              <div className="flex gap-2">
+                                <p className="text-sm/6 text-gray-900">
+                                  {address.city}
+                                </p>
+                                <p className="text-sm/6 text-gray-900">
+                                  {address.state}
+                                </p>
+                              </div>
+                              <div className="flex gap-2">
+                                <p className="text-sm/6 text-gray-900">
+                                  {address.zipCode}
+                                </p>
+                                <p className="text-sm/6 text-gray-900">
+                                  {address.country}
+                                </p>
+                              </div>
                             </div>
-                            <div className="flex gap-2">
-                              <p className="text-sm/6 text-gray-900">
-                                {address.zipCode}
-                              </p>
-                              <p className="text-sm/6 text-gray-900">
-                                {address.country}
-                              </p>
+                            <div className="flex flex-col gap-2">
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  setEditAddressIndex(index);
+                                  setValueEditFormHandler(index);
+                                }}
+                                className="font-medium border-2 rounded-md border-indigo-400 text-indigo-500 hover:text-white hover:bg-indigo-500 text-sm px-5 "
+                              >
+                                Edit
+                              </button>
+                              <button
+                                onClick={(e) => removeAddressHandler(e, index)}
+                                type="button"
+                                className="font-medium border-2 rounded-md border-indigo-400 text-indigo-500 hover:text-white hover:bg-indigo-500 text-sm px-5"
+                              >
+                                Remove
+                              </button>
                             </div>
-                          </div>
-                          <div className="flex flex-col gap-2">
-                            <button
-                              type="button"
-                              onClick={(e) => {
-                                setEditAddressIndex(index);
-                                setValueEditFormHandler(index);
-                              }}
-                              className="font-medium border-2 rounded-md border-indigo-400 text-indigo-500 hover:text-white hover:bg-indigo-500 text-sm px-5 "
-                            >
-                              Edit
-                            </button>
-                            <button
-                              onClick={(e) => removeAddressHandler(e, index)}
-                              type="button"
-                              className="font-medium border-2 rounded-md border-indigo-400 text-indigo-500 hover:text-white hover:bg-indigo-500 text-sm px-5"
-                            >
-                              Remove
-                            </button>
-                          </div>
-                        </li>
-                      ))}
+                          </li>
+                        ))
+                      ) : (
+                        <p className="mt-1 text-md text-gray-600">
+                          Currently There is No Address
+                        </p>
+                      )}
                     </ul>
                   </div>
                 </div>
               </div>
             </div>
-          )}
-        </div>
+          </div>
+        </section>
       </div>
     </div>
   );
