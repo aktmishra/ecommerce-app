@@ -16,13 +16,13 @@ import {
   selectCurrentOrder,
 } from "../features/order/orderSlice";
 import {
-  selectUserCompleteInfo,
+  selectCompleteUserInfo,
   updateUserAsync,
 } from "../features/user/userSlice";
 
 function CheckoutPage() {
   const items = useSelector(selectItems);
-  const user = useSelector(selectUserCompleteInfo);
+  const user = useSelector(selectCompleteUserInfo);
   const currentOrder = useSelector(selectCurrentOrder);
   const {
     register,

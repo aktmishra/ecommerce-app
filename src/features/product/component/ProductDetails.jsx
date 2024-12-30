@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchProductByIdAsync, selectProductById } from "../productSlice";
 import { addToCartAsync } from "../../cart/cartSlice";
 
-import { selectUserCompleteInfo } from "../../user/userSlice";
+import { selectCompleteUserInfo } from "../../user/userSlice";
 
 const reviews = { href: "#", average: 4, totalCount: 117 };
 const colors = [
@@ -40,7 +40,7 @@ export default function ProductDeatails() {
   const [selectedSize, setSelectedSize] = useState(sizes[2]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const user = useSelector(selectUserCompleteInfo);
+  const user = useSelector(selectCompleteUserInfo);
   const product = useSelector(selectProductById);
   const dispatch = useDispatch();
   const params = useParams();

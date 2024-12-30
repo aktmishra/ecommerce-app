@@ -17,11 +17,11 @@ export function fetchLoggedInUserOrder(userId) {
   });
 }
 
-export function updateUser(update) {
+export function updateUser(updateObject) {
   return new Promise(async (resolve) => {
-    const response = await fetch("http://localhost:8080/users/"+update.id, {
+    const response = await fetch("http://localhost:8080/users/"+updateObject.id, {
       method: "PATCH",
-      body: JSON.stringify(update),
+      body: JSON.stringify(updateObject),
       headers: { "content-type": "application/json" },
     });
     const data = await response.json();

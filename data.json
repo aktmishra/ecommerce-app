@@ -6273,14 +6273,14 @@
       "password": "Ankit@123",
       "addresses": [
         {
-          "fullName": "Ankit Mishra",
+          "fullName": "Ankit",
           "email": "Ankit@gmail.com",
-          "phone": "1234566666",
+          "phone": "+919654280284",
           "country": "India",
-          "streetAddress": "X-153/4A Gali No. 2",
-          "city": "Delhi",
-          "state": "Delhi",
-          "zipCode": "110056"
+          "streetAddress": "x 153 ",
+          "city": "Ayodhya",
+          "state": "Uttar Pradesh",
+          "zipCode": "110053"
         }
       ]
     },
@@ -6292,7 +6292,70 @@
       "addresses": []
     }
   ],
-  "cart": [],
+  "cart": [
+    {
+      "id": "4767",
+      "title": "Eyeshadow Palette with Mirror",
+      "description": "The Eyeshadow Palette with Mirror offers a versatile range of eyeshadow shades for creating stunning eye looks. With a built-in mirror, it's convenient for on-the-go makeup application.",
+      "category": "beauty",
+      "price": 19.99,
+      "discountPercentage": 5.5,
+      "rating": 3.28,
+      "stock": 44,
+      "tags": [
+        "beauty",
+        "eyeshadow"
+      ],
+      "brand": "Glamour Beauty",
+      "sku": "MVCFH27F",
+      "weight": 3,
+      "dimensions": {
+        "width": 12.42,
+        "height": 8.63,
+        "depth": 29.13
+      },
+      "warrantyInformation": "1 year warranty",
+      "shippingInformation": "Ships in 2 weeks",
+      "availabilityStatus": "In Stock",
+      "reviews": [
+        {
+          "rating": 4,
+          "comment": "Very satisfied!",
+          "date": "2024-05-23T08:56:21.618Z",
+          "reviewerName": "Liam Garcia",
+          "reviewerEmail": "liam.garcia@x.dummyjson.com"
+        },
+        {
+          "rating": 1,
+          "comment": "Very disappointed!",
+          "date": "2024-05-23T08:56:21.618Z",
+          "reviewerName": "Nora Russell",
+          "reviewerEmail": "nora.russell@x.dummyjson.com"
+        },
+        {
+          "rating": 5,
+          "comment": "Highly impressed!",
+          "date": "2024-05-23T08:56:21.618Z",
+          "reviewerName": "Elena Baker",
+          "reviewerEmail": "elena.baker@x.dummyjson.com"
+        }
+      ],
+      "returnPolicy": "30 days return policy",
+      "minimumOrderQuantity": 32,
+      "meta": {
+        "createdAt": "2024-05-23T08:56:21.618Z",
+        "updatedAt": "2024-05-23T08:56:21.618Z",
+        "barcode": "2817839095220",
+        "qrCode": "https://assets.dummyjson.com/public/qr-code.png"
+      },
+      "images": [
+        "https://cdn.dummyjson.com/products/images/beauty/Eyeshadow%20Palette%20with%20Mirror/1.png"
+      ],
+      "thumbnail": "https://cdn.dummyjson.com/products/images/beauty/Eyeshadow%20Palette%20with%20Mirror/thumbnail.png",
+      "quantity": 1,
+      "user": "34aa"
+    }
+  ],
   "orders": [
     {
       "id": "0dcf",
@@ -6880,6 +6943,105 @@
       },
       "totalAmount": 90,
       "totalItem": 5,
+      "paymentMethod": "cash",
+      "status": "pending"
+    },
+    {
+      "id": "dd39",
+      "items": [
+        {
+          "id": "f4bc",
+          "title": "Red Lipstick",
+          "description": "The Red Lipstick is a classic and bold choice for adding a pop of color to your lips. With a creamy and pigmented formula, it provides a vibrant and long-lasting finish.",
+          "category": "beauty",
+          "price": 12.99,
+          "discountPercentage": 19.03,
+          "rating": 2.51,
+          "stock": 68,
+          "tags": [
+            "beauty",
+            "lipstick"
+          ],
+          "brand": "Chic Cosmetics",
+          "sku": "O5IF1NTA",
+          "weight": 5,
+          "dimensions": {
+            "width": 14.37,
+            "height": 13.94,
+            "depth": 14.6
+          },
+          "warrantyInformation": "Lifetime warranty",
+          "shippingInformation": "Ships in 2 weeks",
+          "availabilityStatus": "In Stock",
+          "reviews": [
+            {
+              "rating": 5,
+              "comment": "Great product!",
+              "date": "2024-05-23T08:56:21.619Z",
+              "reviewerName": "Leo Rivera",
+              "reviewerEmail": "leo.rivera@x.dummyjson.com"
+            },
+            {
+              "rating": 4,
+              "comment": "Very pleased!",
+              "date": "2024-05-23T08:56:21.619Z",
+              "reviewerName": "Oscar Powers",
+              "reviewerEmail": "oscar.powers@x.dummyjson.com"
+            },
+            {
+              "rating": 5,
+              "comment": "Very pleased!",
+              "date": "2024-05-23T08:56:21.619Z",
+              "reviewerName": "Carter Rivera",
+              "reviewerEmail": "carter.rivera@x.dummyjson.com"
+            }
+          ],
+          "returnPolicy": "90 days return policy",
+          "minimumOrderQuantity": 6,
+          "meta": {
+            "createdAt": "2024-05-23T08:56:21.619Z",
+            "updatedAt": "2024-05-23T08:56:21.619Z",
+            "barcode": "9444582199406",
+            "qrCode": "https://assets.dummyjson.com/public/qr-code.png"
+          },
+          "images": [
+            "https://cdn.dummyjson.com/products/images/beauty/Red%20Lipstick/1.png"
+          ],
+          "thumbnail": "https://cdn.dummyjson.com/products/images/beauty/Red%20Lipstick/thumbnail.png",
+          "quantity": 4,
+          "user": "34aa"
+        }
+      ],
+      "user": {
+        "id": "34aa",
+        "fullName": "Ankit Mishra",
+        "email": "Ankit@gmail.com",
+        "password": "Ankit@123",
+        "addresses": [
+          {
+            "fullName": "Ankit Mishra",
+            "email": "Ankit@gmail.com",
+            "phone": "1234566666",
+            "country": "India",
+            "streetAddress": "X-153/4A Gali No. 2",
+            "city": "Delhi",
+            "state": "Delhi",
+            "zipCode": "110056"
+          }
+        ]
+      },
+      "selectedAddress": {
+        "fullName": "Ankit Mishra",
+        "email": "Ankit@gmail.com",
+        "phone": "1234566666",
+        "country": "India",
+        "streetAddress": "X-153/4A Gali No. 2",
+        "city": "Delhi",
+        "state": "Delhi",
+        "zipCode": "110056"
+      },
+      "totalAmount": 52,
+      "totalItem": 4,
       "paymentMethod": "cash",
       "status": "pending"
     }

@@ -1,12 +1,12 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchLoggedInUserOrderAsync, selectUserCompleteInfo, selectUserOrders } from "../userSlice";
+import { fetchLoggedInUserOrderAsync, selectCompleteUserInfo, selectUserOrders } from "../userSlice";
  
 import { Link } from "react-router";
 
 function UserOrder() {
   const orders = useSelector(selectUserOrders);
-  const user = useSelector(selectUserCompleteInfo);
+  const user = useSelector(selectCompleteUserInfo);
   const dispatch = useDispatch();
 
   useEffect(() => {
