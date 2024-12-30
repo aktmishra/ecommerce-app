@@ -6,12 +6,15 @@ import { ChevronDownIcon } from "@heroicons/react/16/solid";
 
 function UserProfile() {
   const userDetail = useSelector(selectCompleteUserInfo);
-  const [showAddressForm, setShowAddressForm] = useState(false);
+  const [showAddAddressForm, setShowAddAddressForm] = useState(false);
+  const [showEditAddressForm, setEditShowAddressForm] = useState(false);
+  const [editAddressIndex, setEditAddressIndex] = useState(null);
   const dispatch = useDispatch();
   const {
     register,
     handleSubmit,
     reset,
+    setValue,
     formState: { errors },
   } = useForm();
 
@@ -21,7 +24,7 @@ function UserProfile() {
       addresses: [...userDetail.addresses, address],
     }; // to avoid shallow copy
     dispatch(updateUserAsync(newUser));
-    setShowAddressForm(false);
+    setShowAddAddressForm(false);
   }
 
   function removeAddressHandler(e, index) {
@@ -31,6 +34,25 @@ function UserProfile() {
     }; // to avoid shallow copy
     newUser.addresses.splice(index, 1);
     dispatch(updateUserAsync(newUser));
+  }
+  const setValueEditFormHandler = (index) => {
+    setEditShowAddressForm(true);
+    const address = userDetail.addresses[index];
+    setValue("fullName", address.fullName);
+    setValue("email", address.email);
+    setValue("city", address.city);
+    setValue("state", address.state);
+    setValue("country", address.country);
+    setValue("zipCode", address.zipCode);
+    setValue("phone", address.phone);
+    setValue("streetAddress", address.streetAddress);
+  };
+
+  function editAddressHandler(address, editAddressIndex) {
+    const newUser = { ...userDetail, addresses: [...userDetail.addresses] }; // for shallow copy issue
+    newUser.addresses.splice(editAddressIndex, 1, address);
+    dispatch(updateUserAsync(newUser));
+    setEditShowAddressForm(false);
   }
 
   return (
@@ -48,18 +70,24 @@ function UserProfile() {
               <div className="mt-4 ">
                 <button
                   type="button"
-                  onClick={(e) => setShowAddressForm(true)}
+                  onClick={(e) => setShowAddAddressForm(true)}
                   className={`${
-                    showAddressForm ? "hidden" : "block"
+                    showAddAddressForm ? "hidden" : "block"
                   } font-medium border-2 rounded-md border-green-700  text-white bg-green-700 text-sm px-5 py-2`}
                 >
                   Add Address
                 </button>
-                {showAddressForm ? (
+                {showAddAddressForm || showEditAddressForm ? (
                   <form
                     noValidate
                     onSubmit={handleSubmit((address) => {
-                      addAddressHandler(address);
+                      if (showAddAddressForm) {
+                        addAddressHandler(address);
+                      }
+
+                      if (showEditAddressForm) {
+                        editAddressHandler(address, editAddressIndex);
+                      }
                       reset();
                     })}
                     className="px-8 py-5 my-5 bg-white"
@@ -302,7 +330,10 @@ function UserProfile() {
                           Reset
                         </button>
                         <button
-                          onClick={() => setShowAddressForm(false)}
+                          onClick={() => {
+                            setShowAddAddressForm(false);
+                            setEditShowAddressForm(false);
+                          }}
                           type="button"
                           className="font-medium border-2 rounded-md border-green-700  text-white bg-green-700 text-sm px-5 py-2"
                         >
@@ -312,7 +343,8 @@ function UserProfile() {
                           type="submit"
                           className="font-medium border-2 rounded-md border-green-700  text-white bg-green-700 text-sm px-5 py-2"
                         >
-                          Add <span className="max-sm:hidden">Address</span>
+                          {showEditAddressForm ? "Edit" : "Add"}
+                          <span className="max-sm:hidden ml-1">Address</span>
                         </button>
                       </div>
                     </div>
@@ -369,6 +401,10 @@ function UserProfile() {
                           <div className="flex flex-col gap-2">
                             <button
                               type="button"
+                              onClick={(e) => {
+                                setEditAddressIndex(index);
+                                setValueEditFormHandler(index);
+                              }}
                               className="font-medium border-2 rounded-md border-indigo-400 text-indigo-500 hover:text-white hover:bg-indigo-500 text-sm px-5 "
                             >
                               Edit

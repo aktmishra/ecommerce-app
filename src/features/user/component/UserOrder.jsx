@@ -42,6 +42,9 @@ function UserOrder() {
             <h1 className=" text-2xl font-bold tracking-tight text-gray-700">
               Order Id # {order.id}
             </h1>
+            <p className=" text-md font-semibold tracking-tight text-gray-700 mt-2">
+              Order Status <span className="text-red-700 ml-2" >{order.status}</span>
+            </p>
           </div>
           <div className="mt-3 px-4 max-sm:px-0 ">
             <div className="flow-root">
