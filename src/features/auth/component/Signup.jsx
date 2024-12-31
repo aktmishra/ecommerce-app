@@ -45,6 +45,7 @@ export default function Signup() {
                     email: userData.email,
                     password: userData.password,
                     addresses: [],
+                    role: "user"
                   })
                 );
                 reset();

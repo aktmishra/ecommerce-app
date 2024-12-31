@@ -1,13 +1,16 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import {
+  createProduct,
   fetchAllProducts,
   fetchBrands,
   fetchCategories,
   fetchProductById,
   fetchProductsByFilters,
 } from "./productAPI";
+import { useSelector } from "react-redux";
 
 const initialState = {
+  allProducts: [],
   products: [],
   categories: [],
   brands: [],
@@ -20,6 +23,7 @@ export const fetchAllProductsAsync = createAsyncThunk(
   "product/fetchAllProducts",
   async () => {
     const response = await fetchAllProducts();
+    // console.log(response.data);
     // The value we return becomes the `fulfilled` action payload
     return response.data;
   }
@@ -58,7 +62,15 @@ export const fetchProductByIdAsync = createAsyncThunk(
     const response = await fetchProductById(id);
     // The value we return becomes the `fulfilled` action payload
     console.log(response);
-    console.log(response.data)
+    console.log(response.data);
+    return response.data;
+  }
+);
+
+export const createProductAsync = createAsyncThunk(
+  'product/createProduct',
+  async (product) => {
+    const response = await createProduct(product);
     return response.data;
   }
 );
@@ -66,7 +78,14 @@ export const fetchProductByIdAsync = createAsyncThunk(
 export const productSlice = createSlice({
   name: "product",
   initialState,
-  reducers: {},
+  reducers: {
+    // totalItemsResetReducer: (state) => {
+    //   state.totalItems = state.allProducts.length;
+    // },
+    // totalItemsSetReducer: (state) => {
+    //   state.totalItems = state?.products?.length;
+    // },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchAllProductsAsync.pending, (state) => {
@@ -74,7 +93,8 @@ export const productSlice = createSlice({
       })
       .addCase(fetchAllProductsAsync.fulfilled, (state, action) => {
         state.status = "idle";
-        state.products = action.payload;
+        state.allProducts = action.payload;
+        state.totalItems = action.payload.length;
       })
       .addCase(fetchProductsByFiltersAsync.pending, (state) => {
         state.status = "loading";
@@ -82,7 +102,6 @@ export const productSlice = createSlice({
       .addCase(fetchProductsByFiltersAsync.fulfilled, (state, action) => {
         state.status = "idle";
         state.products = action.payload.products;
-        state.totalItems = action.payload.totalItems;
       })
       .addCase(fetchCategoriesAsync.pending, (state) => {
         state.status = "loading";
@@ -104,11 +123,19 @@ export const productSlice = createSlice({
       .addCase(fetchProductByIdAsync.fulfilled, (state, action) => {
         state.status = "idle";
         state.selectedProduct = action.payload;
+      })
+      .addCase(createProductAsync.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(createProductAsync.fulfilled, (state, action) => {
+        state.status = 'idle';
+        state.products.push(action.payload);
       });
   },
 });
 
-export const {} = productSlice.actions;
+export const { } =
+  productSlice.actions;
 
 export const selectAllProducts = (state) => state.product.products;
 export const selectTotalItems = (state) => state.product.totalItems;

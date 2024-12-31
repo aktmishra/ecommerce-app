@@ -30,9 +30,9 @@ import {
   selectBrands,
   selectCategories,
   selectTotalItems,
-} from "../productSlice";
+} from "../../product/productSlice";
 import Pagination from "../../pagination/Pagination";
-import ProductGrid from "./ProductGrid";
+import ProductGrid from "../../product/component/ProductGrid";
 import { ITEMS_PER_PAGE } from "../../../app/constant";
 
 const sortOptions = [
@@ -45,7 +45,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function ProductList() {
+export default function AdminProductList() {
   const dispatch = useDispatch();
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [filter, setFilter] = useState({});
@@ -53,7 +53,7 @@ export default function ProductList() {
   const [page, setPage] = useState(1);
   const categories = useSelector(selectCategories);
   const brands = useSelector(selectBrands);
-  const totalItems = useSelector(selectTotalItems);
+  const totalItems = useSelector(selectTotalItems)
   const filters = [
     {
       id: "category",
@@ -75,13 +75,11 @@ export default function ProductList() {
       } else {
         newFilter[section.id] = [option.value];
       }
-      // dispatch(totalItemsSetReducer())
     } else {
       const index = newFilter[section.id].findIndex(
         (value) => value === option.value
       );
       newFilter[section.id].splice(index, 1);
-      // dispatch(totalItemsResetReducer())
     }
     // setState is async, thts why newFilter is decleared and passed to setFilter()
     setFilter(newFilter);
@@ -92,19 +90,18 @@ export default function ProductList() {
     const newSort = { _sort: option.sort, _order: option.order };
     // setState is async, thts why newsort is decleared and passed to setSort()
     setSort(newSort);
+    // dispatch(fetchProductsByFiltersAsync(newSort));
+    // console.log(newSort);
   };
 
   const handlePage = (page) => {
     setPage(page);
   };
-
-  useEffect(() => {
-    dispatch(fetchAllProductsAsync()); // to get totalItems in store
-  }, [dispatch]);
-
+ useEffect(()=>{
+ dispatch(fetchAllProductsAsync());
+ },[])
   useEffect(() => {
     // dispatch(fetchAllProductsAsync()); insted of this fetchProductsByFiltersAsync(filter) work
-
     const pagination = { _page: page, _per_page: ITEMS_PER_PAGE };
     dispatch(fetchProductsByFiltersAsync({ filter, sort, pagination }));
   }, [dispatch, filter, sort, page]);
