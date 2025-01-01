@@ -24,6 +24,7 @@ import AdminHome from "./pages/AdminHome";
 import AdminProductDeatailsPage from "./pages/AdminProductDeatailsPage";
 import AdminEditProductPage from "./pages/AdminEditProductFormPage";
 import AdminAddProductPage from "./pages/AdminAddProductPage";
+import AdminDeleteProduct from "./features/admin/component/AdminDeleteProduct";
 
 const router = createBrowserRouter([
   {
@@ -124,6 +125,14 @@ const router = createBrowserRouter([
     element: (
       <AdminProtected>
         <AdminEditProductPage></AdminEditProductPage>
+      </AdminProtected>
+    ),
+  },
+  {
+    path: "/admin/delete-product/:id",
+    element: (
+      <AdminProtected>
+        <AdminDeleteProduct></AdminDeleteProduct>
       </AdminProtected>
     ),
   },

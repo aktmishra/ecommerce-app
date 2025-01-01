@@ -33,12 +33,11 @@ export function fetchProductsByFilters(filter, sort, pagination) {
     const response = await fetch(
       "http://localhost:8080/products?" + queryString
     );
-    console.log(response)
     const data = await response.json();
-    const totalItems =  response.headers.get("X-Total-Count")
-    console.log(data)
-    
-    resolve({data:{products:data.data, totalItems:+totalItems}});
+    const totalItems = response.headers.get("X-Total-Count");
+    console.log(data);
+
+    resolve({ data: { products: data.data, totalItems: +totalItems } });
   });
 }
 
@@ -64,18 +63,32 @@ export function fetchProductById(id) {
     // TODO-- We will not hard-code here server url  here
     const response = await fetch(`http://localhost:8080/products?id=${id}`);
     const data = await response.json();
-    
-    resolve({data : data[0]});
+    resolve({ data: data[0] });
   });
 }
- 
+
 export function createProduct(product) {
   return new Promise(async (resolve) => {
-    const response = await fetch('http://localhost:8080/products/', {
-      method: 'POST',
+    const response = await fetch("http://localhost:8080/products/", {
+      method: "POST",
       body: JSON.stringify(product),
-      headers: { 'content-type': 'application/json' },
+      headers: { "content-type": "application/json" },
     });
+    const data = await response.json();
+    resolve({ data });
+  });
+}
+
+export function updateProduct(product) {
+  return new Promise(async (resolve) => {
+    const response = await fetch(
+      "http://localhost:8080/products/" + product.id,
+      {
+        method: "PATCH",
+        body: JSON.stringify(product),
+        headers: { "content-type": "application/json" },
+      }
+    );
     const data = await response.json();
     resolve({ data });
   });

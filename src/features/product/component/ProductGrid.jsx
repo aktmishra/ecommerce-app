@@ -1,21 +1,36 @@
 import React from "react";
 import { StarIcon } from "@heroicons/react/24/outline";
 import { Link } from "react-router";
-import { useSelector } from "react-redux";
-import { selectAllProducts } from "../productSlice";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  createProductAsync,
+  fetchProductByIdAsync,
+  selectAllProducts,
+  selectProductById,
+} from "../productSlice";
 import { selectLoggedInUser } from "../../auth/authSlice";
 
 function ProductGrid() {
   const products = useSelector(selectAllProducts);
   const user = useSelector(selectLoggedInUser);
+
   return (
     <div className="lg:col-span-3">
       <div className="bg-white">
         <div className="mx-auto max-w-2xl px-4 py-0 sm:px-6 sm:py-0 lg:max-w-7xl lg:px-8">
           <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
             {products.map((product) => (
-              <div key={product.id} className="flex flex-col gap-1 items-center" >
-                <Link to={`/product-detail/${product.id}`} >
+              <div
+                key={product.id}
+                className="flex flex-col gap-1 items-center"
+              >
+                <Link
+                  to={
+                    user.role === "admin"
+                      ? `/admin/product-detail/${product.id}`
+                      : `/product-detail/${product.id}`
+                  }
+                >
                   <div className="group relative min-h-60 border-gray-300 border-2 p-1 rounded-md  ">
                     <img
                       alt={product.title}
@@ -58,22 +73,31 @@ function ProductGrid() {
                     </div>
                   </div>
                 </Link>
-                {user.role === "admin" && <div className="flex gap-1 mt-1">
-                  <button
-                    type="button"
-                    onClick={(e) => {}}
-                    className="font-medium border-2 rounded-md border-indigo-400 text-indigo-500 hover:text-white hover:bg-indigo-500 text-sm px-4 "
-                  >
-                    Edit
-                  </button>
-                  <button
-                    type="button"
-                    onClick={(e) => {}}
-                    className="font-medium border-2 rounded-md border-red-700 text-red-700 hover:text-white hover:bg-indigo-500 text-sm px-4 "
-                  >
-                    Delete
-                  </button>
-                </div>}
+                {user.role === "admin" && (
+                  <div className="flex gap-1 mt-1">
+                    <Link
+                      to={`/admin/edit-product/${product.id}`}
+                      type="button"
+                      onClick={(e) => {}}
+                      className = {product.deleted === true ?"hidden":"font-medium border-2 rounded-md border-indigo-400 text-indigo-500 hover:text-white hover:bg-indigo-500 text-sm px-3" }
+                    >
+                      Edit
+                    </Link>
+                    {product.deleted === true ? (
+                      <div className="font-medium border-2 rounded-md border-red-700 bg-red-700 text-white text-sm px-3">
+                        Deleted
+                      </div>
+                    ) : (
+                      <Link
+                        type="button"
+                        to={`/admin/delete-product/${product.id}`}
+                        className="font-medium border-2 rounded-md border-red-700 text-red-700 hover:text-white hover:bg-indigo-500 text-sm px-3"
+                      >
+                        Delete
+                      </Link>
+                    )}
+                  </div>
+                )}
               </div>
             ))}
           </div>
