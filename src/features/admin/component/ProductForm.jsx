@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { ChevronDownIcon } from "@heroicons/react/16/solid";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  clearSelectedProduct,
   createProductAsync,
   fetchProductByIdAsync,
   selectBrands,
@@ -17,7 +18,6 @@ function ProductForm() {
   const brands = useSelector(selectBrands);
   const params = useParams();
   const selectedProduct = useSelector(selectProductById);
-
   const dispatch = useDispatch();
   const {
     register,
@@ -27,20 +27,19 @@ function ProductForm() {
     formState: { errors },
   } = useForm();
 
- 
-  
+  useEffect(() => {
+    if (params.id) {
+      dispatch(fetchProductByIdAsync(params.id));
+    } else {
+      dispatch(clearSelectedProduct());
+    }
+  }, [params.id, dispatch]);
 
-useEffect(()=>{
-  if (params.id) {
-    dispatch(fetchProductByIdAsync(params.id))
-     if (selectedProduct) {
+  useEffect(() => {
+    if (selectedProduct && params.id) {
       setValue("brand", selectedProduct.brand);
       setValue("category", selectedProduct.category);
       setValue("discountPercentage", selectedProduct.discountPercentage);
-      // setValue("highlight1", selectedProduct?.highlights[0]);
-      // setValue("highlight2", selectedProduct?.highlights[1]);
-      // setValue("highlight3", selectedProduct?.highlights[2]);
-      // setValue("highlight4", selectedProduct?.highlights[3]);
       setValue("thumbnail", selectedProduct.thumbnail);
       setValue("image1", selectedProduct.images[0]);
       setValue("image2", selectedProduct.images[1]);
@@ -50,19 +49,21 @@ useEffect(()=>{
       setValue("stock", selectedProduct.stock);
       setValue("title", selectedProduct.title);
       setValue("description", selectedProduct.description);
-     }
-
-  }
-},[dispatch, params.id])
-
+    }
+    if (selectedProduct && selectedProduct.highlights) {
+      setValue("highlight1", selectedProduct?.highlights[0]);
+      setValue("highlight2", selectedProduct?.highlights[1]);
+      setValue("highlight3", selectedProduct?.highlights[2]);
+      setValue("highlight4", selectedProduct?.highlights[3]);
+    }
+  }, [dispatch, params.id, selectedProduct, setValue]);
 
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-4 lg:px-8 bg-white mt-5 min-h-screen">
       <form
         noValidate
         onSubmit={handleSubmit((data) => {
-         
-          const product = { ...data, reviews: [] };
+          const product = { ...data };
           product.images = [product.image1, product.image2, product.image3];
           product.highlights = [
             product.highlight1,
@@ -81,15 +82,14 @@ useEffect(()=>{
           product.stock = +product.stock;
           product.discountPercentage = +product.discountPercentage;
           product.id = selectedProduct.id;
+
           if (params.id) {
             dispatch(updateProductAsync(product));
-            console.log(product)
           } else {
             dispatch(createProductAsync(product));
-            
           }
-          
-          // reset();
+
+          reset();
         })}
         className="px-8 py-5 my-12 bg-white"
       >
