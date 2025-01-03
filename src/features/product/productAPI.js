@@ -12,6 +12,7 @@ export function fetchProductsByFilters(filter, sort, pagination) {
   //  sort = {_sort="price", _order="asc"}
   //  pagination = {_page=1, _limit=10}
   //  TODO : on server we will support multiple values for filter
+  //  TODO : server will filter deleted product in case of non-admin user
   let queryString = "";
   for (let key in filter) {
     const categoryValues = filter[key];

@@ -9,6 +9,7 @@ import {
   selectProductById,
 } from "../productSlice";
 import { selectLoggedInUser } from "../../auth/authSlice";
+import { discountedPrice } from "../../../app/constant";
 
 function ProductGrid() {
   const products = useSelector(selectAllProducts);
@@ -60,11 +61,7 @@ function ProductGrid() {
                       </div>
                       <div>
                         <p className="text-sm font-medium text-gray-900">
-                          $
-                          {Math.round(
-                            product.price *
-                              (1 - product.discountPercentage / 100)
-                          )}
+                          ${discountedPrice(product)}
                         </p>
                         <p className="text-sm line-through font-medium text-gray-600">
                           ${product.price}
@@ -79,7 +76,11 @@ function ProductGrid() {
                       to={`/admin/edit-product/${product.id}`}
                       type="button"
                       onClick={(e) => {}}
-                      className = {product.deleted === true ?"hidden":"font-medium border-2 rounded-md border-indigo-400 text-indigo-500 hover:text-white hover:bg-indigo-500 text-sm px-3" }
+                      className={
+                        product.deleted === true
+                          ? "hidden"
+                          : "font-medium border-2 rounded-md border-indigo-400 text-indigo-500 hover:text-white hover:bg-indigo-500 text-sm px-3"
+                      }
                     >
                       Edit
                     </Link>

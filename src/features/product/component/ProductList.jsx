@@ -119,7 +119,7 @@ export default function ProductList() {
   }, []);
 
   return (
-    <div>
+     
       <div className="bg-white">
         <div>
           {/* Mobile filter dialog */}
@@ -392,6 +392,6 @@ export default function ProductList() {
           </main>
         </div>
       </div>
-    </div>
+     
   );
 }

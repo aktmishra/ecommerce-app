@@ -18,10 +18,10 @@ import { selectItems } from "../cart/cartSlice";
 import { selectLoggedInUser } from "../auth/authSlice";
 
 const navigation = [
-  { name: "Dashboard", link: "#", admin: true },
+  { name: "Dashboard", link: "/admin/order", admin: true },
   { name: "Team", link: "#", user: true },
-  { name: "Projects", link: "#", user: true },
-  { name: "Admin", link: "/admin", admin: true },
+  { name: "Product", link: "/", user: true },
+  { name: "Product", link: "/admin", admin: true },
   { name: "Add Product", link: "/admin/add-product", admin: true },
 
   
@@ -209,8 +209,8 @@ export default function Navbar({ children }) {
         </Disclosure>
 
         <header className="bg-white shadow">
-          <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-            <h1 className="text-3xl font-bold tracking-tight text-gray-900">
+          <div className="mx-auto max-w-7xl px-4 py-2 sm:px-6 lg:px-8">
+            <h1 className="text-xl font-bold tracking-tight text-gray-900">
               E-Commerce
             </h1>
           </div>

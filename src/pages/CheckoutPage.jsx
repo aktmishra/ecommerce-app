@@ -19,6 +19,7 @@ import {
   selectCompleteUserInfo,
   updateUserAsync,
 } from "../features/user/userSlice";
+import { discountedPrice } from "../app/constant";
 
 function CheckoutPage() {
   const items = useSelector(selectItems);
@@ -34,7 +35,7 @@ function CheckoutPage() {
   const [paymentMethod, setPaymentMethod] = useState(null);
   const dispatch = useDispatch();
   const totalAmount = Math.round(
-    items.reduce((amount, item) => item.price * item.quantity + amount, 0)
+    items.reduce((amount, item) => discountedPrice(item) * item.quantity + amount, 0)
   );
   const totalItem = items.reduce((total, item) => item.quantity + total, 0);
 
@@ -510,7 +511,7 @@ function CheckoutPage() {
                               <h3>
                                 <a href={product.href}>{product.title}</a>
                               </h3>
-                              <p className="ml-4">${product.price}</p>
+                              <p className="ml-4">${discountedPrice(product)}</p>
                             </div>
                             <p className="mt-1 text-sm text-gray-500">
                               {product.brand}

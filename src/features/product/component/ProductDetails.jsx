@@ -7,6 +7,7 @@ import { fetchProductByIdAsync, selectProductById } from "../productSlice";
 import { addToCartAsync } from "../../cart/cartSlice";
 
 import { selectCompleteUserInfo } from "../../user/userSlice";
+import { discountedPrice } from "../../../app/constant";
 
 const reviews = { href: "#", average: 4, totalCount: 117 };
 const colors = [
@@ -145,6 +146,9 @@ export default function ProductDeatails() {
           <div className="mt-4 lg:row-span-3 lg:mt-0">
             <h2 className="sr-only">Product information</h2>
             <p className="text-3xl tracking-tight text-gray-900">
+              ${discountedPrice(product)}
+            </p>
+            <p className="text-3xl line-through tracking-tight text-gray-900">
               ${product.price}
             </p>
 

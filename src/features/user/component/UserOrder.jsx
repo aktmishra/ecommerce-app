@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchLoggedInUserOrderAsync, selectCompleteUserInfo, selectUserOrders } from "../userSlice";
  
 import { Link } from "react-router";
+import { discountedPrice } from "../../../app/constant";
 
 function UserOrder() {
   const orders = useSelector(selectUserOrders);
@@ -67,7 +68,7 @@ function UserOrder() {
                         <div className="flex justify-between text-base font-medium text-gray-900">
                           <p>{product.title}</p>
                           <div className="flex flex-col   items-start ">
-                            <p className="">${product.price}</p>
+                            <p className="">${discountedPrice(product)}</p>
                             <p className="block text-sm/6 font-medium text-gray-900">
                               Qty. {product.quantity}
                             </p>
