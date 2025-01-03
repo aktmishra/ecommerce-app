@@ -4,7 +4,7 @@ import { Radio, RadioGroup } from "@headlessui/react";
 import { Link, useParams } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProductByIdAsync, selectProductById } from "../productSlice";
-import { addToCartAsync } from "../../cart/cartSlice";
+import { addToCartAsync, selectItems } from "../../cart/cartSlice";
 
 import { selectCompleteUserInfo } from "../../user/userSlice";
 import { discountedPrice } from "../../../app/constant";
@@ -43,15 +43,31 @@ export default function ProductDeatails() {
   const [error, setError] = useState(null);
   const user = useSelector(selectCompleteUserInfo);
   const product = useSelector(selectProductById);
+  const items = useSelector(selectItems);
   const dispatch = useDispatch();
   const params = useParams();
   const id = params.id;
-
+  
+  
   function addToCartHandler(e) {
     e.preventDefault();
-    const newItem = { ...product, quantity: 1, user: user.id };
-    delete newItem["id"];
-    dispatch(addToCartAsync(newItem));
+    try {
+     const index = items.findIndex((item) => item.productId === product.id);
+     if (index < 0) {
+       const newItem = {
+         ...product,
+         productId: product.id,
+         quantity: 1,
+         user: user.id,
+       };
+       delete newItem["id"];
+       dispatch(addToCartAsync(newItem));
+     } else {
+       console.log("already added")
+     }
+   } catch (error) {
+    console.log(error)
+   }
   }
 
   useEffect(() => {
@@ -284,7 +300,7 @@ export default function ProductDeatails() {
                   type="submit"
                   className="mt-10 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                 >
-                  Add to Cart
+                   Add to Cart
                 </button>
               </Link>
             </form>
