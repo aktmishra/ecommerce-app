@@ -7,22 +7,22 @@ import { currentOrderReset } from "../features/order/orderSlice";
 import { selectCompleteUserInfo } from "../features/user/userSlice";
 
 function OrderSuccessPage() {
-  const user = useSelector(selectCompleteUserInfo);
+  const  userDetail = useSelector(selectCompleteUserInfo);
   const params = useParams();
   const id = params?.id;
   const dispatch = useDispatch();
 
   useEffect(() => {
     //reset cart
-    dispatch(resetCartAsync(user.id));
+    dispatch(resetCartAsync( userDetail.id));
     // reset currentOrder
     dispatch(currentOrderReset());
-  }, [dispatch, user]);
+  }, [dispatch,  userDetail]);
 
   return (
     <div>
       {!id && <Navigate to="/" replace={true}></Navigate>}
-      <main className="grid min-h-full place-items-center bg-white px-6 py-24 sm:py-32 lg:px-8">
+      <main className="grid min-h-screen min-w-fit place-items-center bg-white px-6 py-24 sm:py-32 lg:px-8">
         <div className="text-center">
           <p className="text-base font-semibold text-indigo-600">Thank You !</p>
           <h1 className="mt-4 text-balance text-5xl font-semibold tracking-tight text-gray-900 sm:text-7xl">

@@ -20,10 +20,11 @@ import {
   updateUserAsync,
 } from "../features/user/userSlice";
 import { discountedPrice } from "../app/constant";
+import toast from "react-hot-toast";
 
 function CheckoutPage() {
   const items = useSelector(selectItems);
-  const user = useSelector(selectCompleteUserInfo);
+  const  userDetail = useSelector(selectCompleteUserInfo);
   const currentOrder = useSelector(selectCurrentOrder);
   const {
     register,
@@ -35,13 +36,13 @@ function CheckoutPage() {
   const [paymentMethod, setPaymentMethod] = useState(null);
   const dispatch = useDispatch();
   const totalAmount = Math.round(
-    items.reduce((amount, item) => discountedPrice(item) * item.quantity + amount, 0)
+    items.reduce((amount, item) => discountedPrice(item.product) * item.quantity + amount, 0)
   );
   const totalItem = items.reduce((total, item) => item.quantity + total, 0);
 
-  function quantityHandler(e, product) {
+  function quantityHandler(e, item) {
     dispatch(
-      updateProductQuantityAsync({ ...product, quantity: +e.target.value })
+      updateProductQuantityAsync({ id:item.id, quantity: +e.target.value })
     );
   }
 
@@ -51,7 +52,7 @@ function CheckoutPage() {
 
   function addressHandler(e) {
     console.log(e.target.value);
-    setSelectedAddress(user.addresses[e.target.value]);
+    setSelectedAddress( userDetail.addresses[e.target.value]);
   }
 
   function paymentHandler(e) {
@@ -63,16 +64,16 @@ function CheckoutPage() {
     if (selectedAddress && paymentMethod) {
       const order = {
         items,
-        user,
-        selectedAddress,
+        userId:userDetail.id,
+        shippingAddress:selectedAddress,
         totalAmount,
         totalItem,
         paymentMethod,
-        status: "pending", // other value can be recieved, delivered
+        // status: "pending", //  autonaticaly set on server
       };
       dispatch(createOrderAsync(order));
     } else {
-      alert("Enter Address and Payment Method");
+      toast.error("Enter Address and Payment Method");
     }
     //TODO : Redirect to order-success page
     //TODO : clear cart after order
@@ -83,8 +84,8 @@ function CheckoutPage() {
     console.log(data);
     dispatch(
       updateUserAsync({
-        ...user,
-        addresses: [...user.addresses, data],
+        ... userDetail,
+        addresses: [... userDetail.addresses, data],
       })
     );
     reset();
@@ -349,7 +350,7 @@ function CheckoutPage() {
                   </button>
                 </div>
                 {/* Saved Addresses  */}
-                {user.addresses.length > 0 && (
+                { userDetail.addresses.length > 0 && (
                   <div className="border-b border-gray-900/10 pb-0">
                     <div className="space-y-5">
                       <fieldset>
@@ -365,7 +366,7 @@ function CheckoutPage() {
                               role="list"
                               className="divide-y divide-gray-100"
                             >
-                              {user.addresses.map((address, index) => (
+                              { userDetail.addresses.map((address, index) => (
                                 <li
                                   key={index}
                                   className="flex  gap-x-6 py-5 items-center justify-center"
@@ -495,12 +496,12 @@ function CheckoutPage() {
                     role="list"
                     className="-my-6 divide-y divide-gray-200 px-4 py-6 sm:px-6 "
                   >
-                    {items.map((product) => (
-                      <li key={product.id} className="flex py-6">
+                    {items.map((item) => (
+                      <li key={item.id} className="flex py-6">
                         <div className="size-24 shrink-0 overflow-hidden rounded-md border border-gray-200">
                           <img
-                            alt={product.title}
-                            src={product.thumbnail}
+                            alt={item.product.title}
+                            src={item.product.thumbnail}
                             className="size-full object-cover"
                           />
                         </div>
@@ -509,12 +510,13 @@ function CheckoutPage() {
                           <div>
                             <div className="flex justify-between text-base font-medium text-gray-900">
                               <h3>
-                                <a href={product.href}>{product.title}</a>
+                                <a
+                                >{item.product.title}</a>
                               </h3>
-                              <p className="ml-4">${discountedPrice(product)}</p>
+                              <p className="ml-4">${discountedPrice(item.product)}</p>
                             </div>
                             <p className="mt-1 text-sm text-gray-500">
-                              {product.brand}
+                              {item.product.brand}
                             </p>
                           </div>
                           <div className="flex flex-1 items-end justify-between text-sm">
@@ -526,11 +528,11 @@ function CheckoutPage() {
                                 Qty.
                               </label>
                               <select
-                                onChange={(e) => quantityHandler(e, product)}
+                                onChange={(e) => quantityHandler(e, item)}
                                 name=""
                                 id="Qty"
                                 className="border-gray-200 border-2"
-                                value={product.quantity}
+                                value={item.quantity}
                               >
                                 <option value="1">1</option>
                                 <option value="2">2</option>
@@ -542,7 +544,7 @@ function CheckoutPage() {
 
                             <div className="flex">
                               <button
-                                onClick={() => removeProductHandler(product.id)}
+                                onClick={() => removeProductHandler(item.id)}
                                 type="button"
                                 className="font-medium text-indigo-600 hover:text-indigo-500"
                               >

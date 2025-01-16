@@ -1,19 +1,14 @@
 import React from "react";
 import { StarIcon } from "@heroicons/react/24/outline";
 import { Link } from "react-router";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  createProductAsync,
-  fetchProductByIdAsync,
-  selectAllProducts,
-  selectProductById,
-} from "../productSlice";
-import { selectLoggedInUser } from "../../auth/authSlice";
+import { useSelector } from "react-redux";
+import { selectAllProducts } from "../productSlice";
 import { discountedPrice } from "../../../app/constant";
+import { selectCompleteUserInfo } from "../../user/userSlice";
 
 function ProductGrid() {
   const products = useSelector(selectAllProducts);
-  const user = useSelector(selectLoggedInUser);
+  const userDetail = useSelector(selectCompleteUserInfo);
 
   return (
     <div className="lg:col-span-3">
@@ -27,7 +22,7 @@ function ProductGrid() {
               >
                 <Link
                   to={
-                    user.role === "admin"
+                    userDetail.role === "admin"
                       ? `/admin/product-detail/${product.id}`
                       : `/product-detail/${product.id}`
                   }
@@ -70,7 +65,7 @@ function ProductGrid() {
                     </div>
                   </div>
                 </Link>
-                {user.role === "admin" && (
+                {userDetail.role === "admin" && (
                   <div className="flex gap-1 mt-1">
                     <Link
                       to={`/admin/edit-product/${product.id}`}

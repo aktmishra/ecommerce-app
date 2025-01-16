@@ -5,12 +5,12 @@ import { Navigate } from "react-router";
 
 function Logout() {
   const dispatch = useDispatch();
-  const user = useSelector(selectLoggedInUser);
+  const loggedInUser = useSelector(selectLoggedInUser);
   useEffect(() => {
     dispatch(logOutAsync());
   }, []);
   // but useEffect runs after render, so we have to delay navigate part
-  return <>{!user && <Navigate to="/login" replace={true}></Navigate>}</>;
+  return <>{!loggedInUser && <Navigate to="/login" replace={true}></Navigate>}</>;
 }
 
 export default Logout;

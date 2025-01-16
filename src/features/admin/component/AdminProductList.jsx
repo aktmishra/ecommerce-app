@@ -23,7 +23,6 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 
 import {
-  fetchAllProductsAsync,
   fetchBrandsAsync,
   fetchCategoriesAsync,
   fetchProductsByFiltersAsync,
@@ -97,9 +96,7 @@ export default function AdminProductList() {
   const handlePage = (page) => {
     setPage(page);
   };
- useEffect(()=>{
- dispatch(fetchAllProductsAsync());
- },[])
+ 
   useEffect(() => {
     // dispatch(fetchAllProductsAsync()); insted of this fetchProductsByFiltersAsync(filter) work
     const pagination = { _page: page, _per_page: ITEMS_PER_PAGE };

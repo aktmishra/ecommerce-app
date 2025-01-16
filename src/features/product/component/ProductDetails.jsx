@@ -8,6 +8,7 @@ import { addToCartAsync, selectItems } from "../../cart/cartSlice";
 
 import { selectCompleteUserInfo } from "../../user/userSlice";
 import { discountedPrice } from "../../../app/constant";
+import toast from "react-hot-toast";
 
 const reviews = { href: "#", average: 4, totalCount: 117 };
 const colors = [
@@ -41,33 +42,33 @@ export default function ProductDeatails() {
   const [selectedSize, setSelectedSize] = useState(sizes[2]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const user = useSelector(selectCompleteUserInfo);
+  const userDetail = useSelector(selectCompleteUserInfo);
   const product = useSelector(selectProductById);
   const items = useSelector(selectItems);
   const dispatch = useDispatch();
   const params = useParams();
   const id = params.id;
-  
-  
+
   function addToCartHandler(e) {
     e.preventDefault();
     try {
-     const index = items.findIndex((item) => item.productId === product.id);
-     if (index < 0) {
-       const newItem = {
-         ...product,
-         productId: product.id,
-         quantity: 1,
-         user: user.id,
-       };
-       delete newItem["id"];
-       dispatch(addToCartAsync(newItem));
-     } else {
-       console.log("already added")
-     }
-   } catch (error) {
-    console.log(error)
-   }
+      const index =
+        items && items.length > 0
+          ? items.findIndex((item) => item.product.id === product.id)
+          : -1;
+      if (index < 0) {
+        const newItem = {
+          userId: userDetail.id,
+          productId: product.id,
+          quantity: 1,
+        };
+        dispatch(addToCartAsync(newItem));
+      } else {
+        toast.error("Already added to cart");
+      }
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   useEffect(() => {
@@ -188,12 +189,12 @@ export default function ProductDeatails() {
                   ))}
                 </div>
 
-                <a
+                {/* <a
                   href={reviews.href}
                   className="ml-3 text-sm font-medium text-indigo-600 hover:text-indigo-500"
                 >
                   {product.reviews.length} reviews
-                </a>
+                </a> */}
               </div>
             </div>
 
@@ -300,7 +301,7 @@ export default function ProductDeatails() {
                   type="submit"
                   className="mt-10 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                 >
-                   Add to Cart
+                  Add to Cart
                 </button>
               </Link>
             </form>

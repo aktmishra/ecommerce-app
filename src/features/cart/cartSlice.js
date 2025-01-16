@@ -3,9 +3,10 @@ import {
   addToCart,
   fetchCartItemsByUserId,
   removeProductFromCart,
-  resetCart,
+  // resetCart,
   updateProductQuantity,
 } from "./cartAPI";
+import toast from "react-hot-toast";
 
 const initialState = {
   items: [],
@@ -17,7 +18,10 @@ export const addToCartAsync = createAsyncThunk(
   async (item) => {
     const response = await addToCart(item);
     // The value we return becomes the `fulfilled` action payload
-    return response.data;
+    if (response.data.success) {
+      toast.success(response.data.message)
+    } 
+    return response.data.data;
   }
 );
 export const fetchCartItemsByUserIdAsync = createAsyncThunk(
@@ -25,33 +29,42 @@ export const fetchCartItemsByUserIdAsync = createAsyncThunk(
   async (userId) => {
     const response = await fetchCartItemsByUserId(userId);
     // The value we return becomes the `fulfilled` action payload
-    return response.data;
+    return response.data.data;
   }
 );
 
 export const updateProductQuantityAsync = createAsyncThunk(
   "cart/updateProductQuantity",
-  async (productObject) => {
-    const response = await updateProductQuantity(productObject);
+  async ( item) => {
+    const response = await updateProductQuantity(item);
     console.log(response);
     console.log(response.data);
-    return response.data;
+    return response.data.data;
   }
 );
 export const removeProductFromCartAsync = createAsyncThunk(
   "cart/removeProductFromCart",
-  async (productId) => {
-    const response = await removeProductFromCart(productId);
-    return response.data;
+  async (itemId) => {
+    const response = await removeProductFromCart(itemId);
+    if (response.data.success) {
+      toast.success(response.data.message)
+    }else{
+      toast.error(response.data.message)
+    }
+    return response.data.data;
   }
 );
 
 export const resetCartAsync = createAsyncThunk(
   "cart/resetCart",
   async (userId) => {
-    const response = await resetCart(userId);
+    const response = await fetchCartItemsByUserId(userId);
     // The value we return becomes the `fulfilled` action payload
-    return response.data;
+    const items = response.data.data;
+    for (let item of items) {
+      await removeProductFromCart(item.id);
+     }
+     
   }
 );
 
@@ -93,7 +106,9 @@ export const cartSlice = createSlice({
         const index = state.items.findIndex(
           (item) => item.id === action.payload.id
         );
-        state.items.splice(index, 1);
+        if (index >= 0) {
+          state.items.splice(index, 1); // Remove the item from the cart
+        }
       })
       .addCase(resetCartAsync.pending, (state) => {
         state.status = "loading";

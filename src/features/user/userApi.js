@@ -1,6 +1,8 @@
+import { ORDER_API_ENDPOINT, USER_API_ENDPOINT } from "../../app/constant";
+
 export function fetchLoggedInUserDetails(userId) {
   return new Promise(async (resolve) =>{
-    const response = await fetch('http://localhost:8080/users/'+userId) 
+    const response = await fetch(`${USER_API_ENDPOINT}/${userId}`) 
     const data = await response.json()
     resolve({data})
   }
@@ -9,9 +11,7 @@ export function fetchLoggedInUserDetails(userId) {
 
 export function fetchLoggedInUserOrder(userId) {
   return new Promise(async (resolve) => {
-    const response = await fetch(
-      "http://localhost:8080/orders/?user.id=" + userId
-    );
+    const response = await fetch(`${ORDER_API_ENDPOINT}/${userId}`);
     const data = await response.json();
     resolve({ data });
   });
@@ -19,7 +19,7 @@ export function fetchLoggedInUserOrder(userId) {
 
 export function updateUser(updateObject) {
   return new Promise(async (resolve) => {
-    const response = await fetch("http://localhost:8080/users/"+updateObject.id, {
+    const response = await fetch( `${USER_API_ENDPOINT}/edit/${updateObject.id}`, {
       method: "PATCH",
       body: JSON.stringify(updateObject),
       headers: { "content-type": "application/json" },

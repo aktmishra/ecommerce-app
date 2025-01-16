@@ -4,6 +4,7 @@ import {
   fetchLoggedInUserOrder,
   updateUser,
 } from "./userApi";
+import toast from "react-hot-toast";
 
 const initialState = {
   completeUserInfo: null,
@@ -17,7 +18,7 @@ export const fetchLoggedInUserDetailsAsync = createAsyncThunk(
     const response = await fetchLoggedInUserDetails(userId);
     // The value we return becomes the `fulfilled` action payload
     console.log(response);
-    return response.data;
+    return response.data.data;
   }
 );
 
@@ -26,7 +27,7 @@ export const fetchLoggedInUserOrderAsync = createAsyncThunk(
   async (userId) => {
     const response = await fetchLoggedInUserOrder(userId);
     // The value we return becomes the `fulfilled` action payload
-    return response.data;
+    return response.data.data;
   }
 );
 
@@ -35,7 +36,12 @@ export const updateUserAsync = createAsyncThunk(
   async (updateObject) => {
     const response = await updateUser(updateObject);
     console.log(response);
-    return response.data;
+    if (response.data.success) {
+      toast.success(response.data.message)
+    }else{
+      toast.error(response.data.message)
+    }
+    return response.data.data;
   }
 );
 

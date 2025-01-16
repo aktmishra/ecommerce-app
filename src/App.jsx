@@ -26,6 +26,7 @@ import AdminEditProductPage from "./pages/AdminEditProductFormPage";
 import AdminAddProductPage from "./pages/AdminAddProductPage";
 import AdminDeleteProduct from "./features/admin/component/AdminDeleteProduct";
 import AdminOrderPage from "./pages/AdminOrderPage";
+import { Toaster } from "react-hot-toast";
 
 const router = createBrowserRouter([
   {
@@ -161,18 +162,19 @@ const router = createBrowserRouter([
 
 function App() {
   const dispatch = useDispatch();
-  const user = useSelector(selectLoggedInUser);
+  const loggedInUser = useSelector(selectLoggedInUser);
 
   useEffect(() => {
-    if (user) {
-      dispatch(fetchCartItemsByUserIdAsync(user.id));
-      dispatch(fetchLoggedInUserDetailsAsync(user.id));
+    if (loggedInUser) {
+      dispatch(fetchCartItemsByUserIdAsync(loggedInUser.id));
+      dispatch(fetchLoggedInUserDetailsAsync(loggedInUser.id));
     }
-  }, [dispatch, user]);
+  }, [dispatch, loggedInUser]);
 
   return (
     <div className="App">
       <RouterProvider router={router} />
+      <Toaster></Toaster>
     </div>
   );
 }

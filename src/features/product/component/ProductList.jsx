@@ -23,7 +23,6 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 
 import {
-  fetchAllProductsAsync,
   fetchBrandsAsync,
   fetchCategoriesAsync,
   fetchProductsByFiltersAsync,
@@ -54,6 +53,7 @@ export default function ProductList() {
   const categories = useSelector(selectCategories);
   const brands = useSelector(selectBrands);
   const totalItems = useSelector(selectTotalItems);
+
   const filters = [
     {
       id: "category",
@@ -98,10 +98,7 @@ export default function ProductList() {
     setPage(page);
   };
 
-  useEffect(() => {
-    dispatch(fetchAllProductsAsync()); // to get totalItems in store
-  }, [dispatch]);
-
+ 
   useEffect(() => {
     // dispatch(fetchAllProductsAsync()); insted of this fetchProductsByFiltersAsync(filter) work
 
@@ -275,13 +272,7 @@ export default function ProductList() {
                   </MenuItems>
                 </Menu>
 
-                <button
-                  type="button"
-                  className="-m-2 ml-5 p-2 text-gray-400 hover:text-gray-500 sm:ml-7"
-                >
-                  <span className="sr-only">View grid</span>
-                  <Squares2X2Icon aria-hidden="true" className="size-5" />
-                </button>
+                
                 <button
                   type="button"
                   onClick={() => setMobileFiltersOpen(true)}
@@ -334,7 +325,7 @@ export default function ProductList() {
                                 <div className="group grid size-4 grid-cols-1">
                                   <input
                                     defaultValue={option.value}
-                                    defaultChecked={option.checked}
+                                    // defaultChecked={option.checked}
                                     id={`filter-${section.id}-${optionIdx}`}
                                     name={`${section.id}[]`}
                                     onChange={(e) =>

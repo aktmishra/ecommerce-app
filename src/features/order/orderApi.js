@@ -1,6 +1,8 @@
+import { ORDER_API_ENDPOINT } from "../../app/constant";
+
 export function createOrder(order) {
   return new Promise(async (resolve) => {
-    const response = await fetch("http://localhost:8080/orders", {
+    const response = await fetch(`${ORDER_API_ENDPOINT}/create`, {
       method: "POST",
       body: JSON.stringify(order),
       headers: { "content-type": "application/json" },
