@@ -10,18 +10,28 @@ import {
 
 import { useDispatch, useSelector } from "react-redux";
 import {
-  fetchAllOrdersAsync,
   fetchOrdersByFiltersAsync,
   selectAllOrder,
-  selectTotalOrder,
+  selectTotalItems,
   updateOrderAsync,
 } from "../../order/orderSlice";
 import { discountedPrice, ITEMS_PER_PAGE } from "../../../app/constant";
 
 const sortOptions = [
-  { name: "Date", sort: "date", order: "", current: false },
-  { name: "Amount: Asc", sort: "totalAmount", order: "asc", current: false },
-  { name: "Amount: Desc", sort: "totalAmount", order: "desc", current: false },
+  { name: "Date: Newest", sort: "date", order: "asc", current: false },
+  { name: "Date: Oldest", sort: "date", order: "desc", current: false },
+  {
+    name: "Amount: Low to Hight",
+    sort: "totalAmount",
+    order: "asc",
+    current: false,
+  },
+  {
+    name: "Amount: High to Low",
+    sort: "totalAmount",
+    order: "desc",
+    current: false,
+  },
 ];
 
 function classNames(...classes) {
@@ -38,7 +48,7 @@ function chooseBgColor(status) {
       return "bg-yellow-600";
     case "delivered":
       return "bg-green-600";
-    case " canceled":
+    case "canceled":
       return "bg-red-600";
     default:
       return "bg-purple-600";
@@ -47,22 +57,22 @@ function chooseBgColor(status) {
 function chooseTextColor(status) {
   switch (status) {
     case "pending":
-      return "  text-purple-600";
+      return "text-purple-600";
     case "accepted":
-      return "  text-blue-600";
+      return "text-blue-600";
     case "dispatched":
-      return "   text-yellow-600";
+      return "text-yellow-600";
     case "delivered":
-      return "   text-green-600";
-    case " canceled":
-      return "   text-red-600";
+      return "text-green-600";
+    case "canceled":
+      return "text-red-600";
     default:
-      return "   text-purple-600";
+      return "text-purple-600";
   }
 }
 function AdminOrder() {
   const orders = useSelector(selectAllOrder);
-  const totalItems = useSelector(selectTotalOrder);
+  const totalItems = useSelector(selectTotalItems);
   const dispatch = useDispatch();
   const [editableOrderId, setEditableOrderId] = useState(-1);
   const [sort, setSort] = useState({});
@@ -77,9 +87,6 @@ function AdminOrder() {
     setPage(page);
   }
 
-  useEffect(() => {
-    dispatch(fetchAllOrdersAsync());
-  }, []);
   useEffect(() => {
     const pagination = { _page: page, _per_page: ITEMS_PER_PAGE };
     dispatch(fetchOrdersByFiltersAsync({ sort, pagination }));
@@ -108,7 +115,7 @@ function AdminOrder() {
             <p className="group inline-flex justify-center text-3xl font-bold text-gray-800 ">
               Total Order:{" "}
               <span className="ml-2 text-green-700 font-extrabold">
-                {orders ? orders.length : 0}
+                {totalItems}
               </span>
             </p>
           </div>
@@ -127,7 +134,7 @@ function AdminOrder() {
 
               <MenuItems
                 transition
-                className="absolute right-0 z-10 mt-2 w-40 origin-top-right rounded-md bg-white shadow-2xl ring-1 ring-black/5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
+                className="w-48 absolute right-0 z-10 mt-2 origin-top-right rounded-md bg-white shadow-2xl ring-1 ring-black/5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
               >
                 <div className="py-1">
                   {sortOptions.map((option) => (
@@ -150,10 +157,10 @@ function AdminOrder() {
             </Menu>
           </div>
         </div>
-        <section className="container ">
+        <section className="container max-w-7xl px-2 ">
           <div className="flex flex-col mt-2 ">
             <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-              <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
+              <div className="inline-block py-2 align-middle md:px-6 lg:px-8">
                 <div className="overflow-hidden border border-gray-200 dark:border-gray-700 md:rounded-lg ">
                   <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700  ">
                     <thead className="bg-gray-50 dark:bg-gray-800">
@@ -168,9 +175,15 @@ function AdminOrder() {
                           scope="col"
                           className="px-4 py-3.5 text-sm font-medium text-left rtl:text-right text-gray-500 dark:text-gray-400"
                         >
-                          ITEMS
+                          ITEM DETAILS
                         </th>
 
+                        <th
+                          scope="col"
+                          className="px-4 py-3.5 text-sm font-medium text-left rtl:text-right text-gray-500 dark:text-gray-400 whitespace-nowrap"
+                        >
+                          TOTAL OTY.
+                        </th>
                         <th
                           scope="col"
                           className=" px-8 py-3.5 text-sm font-medium text-left rtl:text-right text-gray-500 dark:text-gray-400"
@@ -213,41 +226,46 @@ function AdminOrder() {
                                         Oty. {item.quantity}
                                       </span>
                                       <span className="ml-3 min-w-16 text-sm  ">
-                                        $ {discountedPrice(item)}
+                                        $ {discountedPrice(item.product)}
                                       </span>
                                     </div>
 
                                     <img
                                       className="object-cover ml-3 w-6 h-6 rounded-full   "
-                                      src={item.thumbnail}
-                                      alt={item.title}
+                                      src={item.product.thumbnail}
+                                      alt={item.product.title}
                                     />
                                     <div className="text-xs text-gray-800  dark:text-white ">
-                                      {item.title}
+                                      {item.product.title}
                                     </div>
                                   </div>
                                 </div>
                               ))}
                             </td>
                             <td className="px-8 py-4 text-sm text-gray-500 dark:text-gray-300 whitespace-nowrap">
+                              <strong>{order.totalItem}</strong>
+                            </td>
+                            <td className="px-8 py-4 text-sm text-gray-500 dark:text-gray-300 whitespace-nowrap">
                               $ <strong>{order.totalAmount}</strong>
                             </td>
-                            <td className="px-4 py-4 text-sm text-gray-500 dark:text-gray-300 whitespace-nowrap">
+                            <td className="px-4 py-4 text-sm text-gray-500 dark:text-gray-300 whitespace-nowrap min-w-fit">
                               <div className="">
                                 <div>
                                   <strong>
-                                    {order.selectedAddress.fullName}
+                                    {order.shippingAddress.fullName}
                                   </strong>
                                   ,
                                 </div>
-                                <div>{order.selectedAddress.email},</div>
-                                <div>{order.selectedAddress.phone}, </div>
+                                <div>{order.shippingAddress.email},</div>
+                                <div>{order.shippingAddress.phone}, </div>
                                 <div>
-                                  {order.selectedAddress.streetAddress},{" "}
+                                  {order.shippingAddress.streetAddress},{" "}
                                 </div>
-                                <div>{order.selectedAddress.city}, </div>
-                                <div>{order.selectedAddress.state}, </div>
-                                <div>{order.selectedAddress.zipCode}, </div>
+                                <div>
+                                  {order.shippingAddress.zipCode},{" "}
+                                  {order.shippingAddress.city},{" "}
+                                </div>
+                                <div>{order.shippingAddress.state}, </div>
                               </div>
                             </td>
                             <td className="px-12 py-4 text-sm font-medium text-gray-700 whitespace-nowrap">

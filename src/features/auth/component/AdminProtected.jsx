@@ -11,9 +11,12 @@ function AdminProtected({children}) {
     return <Navigate to="/login" replace={true}></Navigate>;
   }
 
- if (loggedInUser && loggedInUser.role === "admin") {
-    return <Navigate to="/admin" replace = {true}></Navigate>
+ if (loggedInUser && loggedInUser.role !== "admin") {
+    return <Navigate to="/" replace = {true}></Navigate>
  } 
+//  if (loggedInUser && loggedInUser.role === "admin") {
+//     return <Navigate to="/admin" replace = {true}></Navigate>
+//  } 
 
   return children;
 }

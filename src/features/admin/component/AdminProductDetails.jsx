@@ -54,18 +54,19 @@ export default function AdminProductDeatails() {
   function addToCartHandler(e) {
     e.preventDefault();
     try {
-      const index = items.findIndex((item) => item.productId === product.id);
+      const index =
+        items && items.length > 0
+          ? items.findIndex((item) => item.product.id === product.id)
+          : -1;
       if (index < 0) {
         const newItem = {
-          ...product,
+          userId: userDetail.id,
           productId: product.id,
           quantity: 1,
-          user: user.id,
         };
-        delete newItem["id"];
         dispatch(addToCartAsync(newItem));
       } else {
-        console.log("already added");
+        toast.error("Already added to cart");
       }
     } catch (error) {
       console.log(error);

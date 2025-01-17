@@ -12,14 +12,6 @@ export function createOrder(order) {
   });
 }
 
-export function fetchAllOrders() {
-  return new Promise(async (resolve) => {
-    // TODO-- We will not hard-code here server url  here
-    const response = await fetch("http://localhost:8080/orders");
-    const data = await response.json();
-    resolve({ data });
-  });
-}
 
 export function fetchOrdersByFilters(sort, pagination) {
   //  sort = {_sort="price", _order="asc"}
@@ -35,17 +27,17 @@ export function fetchOrdersByFilters(sort, pagination) {
 
   return new Promise(async (resolve) => {
     // TODO-- We will not hard-code here server url  here
-    const response = await fetch("http://localhost:8080/orders?" + queryString);
+    const response = await fetch(`${ORDER_API_ENDPOINT}?${queryString}`);
     const data = await response.json();
-    // const totalItems = response.headers.get("X-Total-Count");
+    const totalItems = response.headers.get("X-Total-Count");
 
-    resolve({ data:{orders:data.data} });
+    resolve({data: { data: data, totalItems: +totalItems } });
   });
 }
 
 export function updateOrder(order){
  return new Promise(async (resolve) => {
-  const response = await fetch("http://localhost:8080/orders/"+order.id, {
+  const response = await fetch(`${ORDER_API_ENDPOINT}/${order.id}`, {
     method:"PATCH",
     body: JSON.stringify(order),
     headers:{"content-type":"application/json"}

@@ -26,6 +26,7 @@ export function fetchCartItemsByUserId(userId) {
       reject(errorData);
     }
     const data = await response.json();
+    console.log(data)
     resolve({ data });
   });
 }

@@ -1,16 +1,15 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import {
   createOrder,
-  fetchAllOrders,
+ 
   fetchOrdersByFilters,
   updateOrder,
 } from "./orderApi";
 
 const initialState = {
-  allOrders: [],
   orders: [],
   currentOrder: null,
-  totalOrdersCount: 0,
+  totalItems: 0,
   status: "idle",
 };
 
@@ -23,20 +22,12 @@ export const createOrderAsync = createAsyncThunk(
   }
 );
 
-export const fetchAllOrdersAsync = createAsyncThunk(
-  "product/fetchAllOrders",
-  async () => {
-    const response = await fetchAllOrders();
-    // console.log(response.data);
-    // The value we return becomes the `fulfilled` action payload
-    return response.data;
-  }
-);
 export const fetchOrdersByFiltersAsync = createAsyncThunk(
   "product/fetchOrdersByFilters",
   async ({ sort, pagination }) => {
     const response = await fetchOrdersByFilters(sort, pagination);
     // The value we return becomes the `fulfilled` action payload
+     console.log(response.data);
     return response.data;
   }
 );
@@ -61,14 +52,6 @@ const orderSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchAllOrdersAsync.pending, (state) => {
-        state.status = "loading";
-      })
-      .addCase(fetchAllOrdersAsync.fulfilled, (state, action) => {
-        state.status = "idle";
-        state.allOrders = action.payload;
-        state.totalOrdersCount = action.payload.length;
-      })
       .addCase(createOrderAsync.pending, (state) => {
         state.status = "loading";
       })
@@ -82,7 +65,8 @@ const orderSlice = createSlice({
       })
       .addCase(fetchOrdersByFiltersAsync.fulfilled, (state, action) => {
         state.status = "idle";
-        state.orders = action.payload.orders;
+        state.orders = action.payload.data.data;
+        state.totalItems = action.payload.totalItems;
       })
       .addCase(updateOrderAsync.pending, (state) => {
         state.status = "loading";
@@ -90,9 +74,9 @@ const orderSlice = createSlice({
       .addCase(updateOrderAsync.fulfilled, (state, action) => {
         state.status = "idle";
         const index = state.orders.findIndex(
-          (order) => order.id === action.payload.id
+          (order) => order.id === action.payload.data.id
         );
-        state.orders[index] = action.payload;
+        state.orders[index] = action.payload.data;
       });
   },
 });
@@ -100,5 +84,5 @@ const orderSlice = createSlice({
 export const { currentOrderReset } = orderSlice.actions;
 export const selectCurrentOrder = (state) => state.order.currentOrder;
 export const selectAllOrder = (state) => state.order.orders;
-export const selectTotalOrder = (state) => state.order.totalOrdersCount;
+export const selectTotalItems = (state) => state.order.totalItems;
 export default orderSlice.reducer;

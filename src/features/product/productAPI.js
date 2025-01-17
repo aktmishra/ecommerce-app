@@ -4,7 +4,7 @@ import {
   PRODUCT_API_ENDPOINT,
 } from "../../app/constant";
 
-export function fetchProductsByFilters(filter, sort, pagination) {
+export function fetchProductsByFilters(filter, sort, pagination, admin) {
   //  filter = {"category":"smartpone"}
   //  filter = {"category":["smartphone", "laptop"] } for multiple filter
   //  sort = {_sort="price", _order="asc"}
@@ -12,6 +12,7 @@ export function fetchProductsByFilters(filter, sort, pagination) {
   //  TODO : on server we will support multiple values for filter
   //  TODO : server will filter deleted product in case of non-admin user
   let queryString = "";
+ 
   for (let key in filter) {
     const categoryValues = filter[key];
     if (categoryValues.length) {
@@ -26,7 +27,9 @@ export function fetchProductsByFilters(filter, sort, pagination) {
   for (let key in pagination) {
     queryString += `${key}=${pagination[key]}&`;
   }
-
+  if(admin){
+    queryString += `admin=true`;
+  }
   return new Promise(async (resolve) => {
     // TODO-- We will not hard-code here server url  here
     const response = await fetch(`${PRODUCT_API_ENDPOINT}?${queryString}`);
