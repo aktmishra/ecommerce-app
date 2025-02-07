@@ -1,4 +1,5 @@
 export const ITEMS_PER_PAGE = 10;
+export const AUTH_API_ENDPOINT = "http://localhost:8080/api/v1/auth"
 export const USER_API_ENDPOINT = "http://localhost:8080/api/v1/user"
 export const PRODUCT_API_ENDPOINT = "http://localhost:8080/api/v1/products"
 export const CATEGORY_API_ENDPOINT = "http://localhost:8080/api/v1/category"

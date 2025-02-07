@@ -1,8 +1,8 @@
-import { USER_API_ENDPOINT } from "../../app/constant";
+import { AUTH_API_ENDPOINT, USER_API_ENDPOINT } from "../../app/constant";
 
 export function createUser(userData) {
   return new Promise(async (resolve) => {
-    const response = await fetch( `${USER_API_ENDPOINT}/signup`, {
+    const response = await fetch( `${AUTH_API_ENDPOINT}/signup`, {
       method: "POST",
       body: JSON.stringify(userData),
       headers: {
@@ -17,11 +17,9 @@ export function createUser(userData) {
 }
 
 export function fetchUser(loginInfo) {
-  const email = loginInfo.email;
-  const password = loginInfo.password;
   return new Promise(async (resolve, reject) => {
     try {
-      const response = await fetch( `${USER_API_ENDPOINT}/login`, {
+      const response = await fetch( `${AUTH_API_ENDPOINT}/login`, {
         method: "POST",
         body: JSON.stringify(loginInfo),
         headers: {

@@ -27,6 +27,7 @@ import AdminAddProductPage from "./pages/AdminAddProductPage";
 import AdminDeleteProduct from "./features/admin/component/AdminDeleteProduct";
 import AdminOrderPage from "./pages/AdminOrderPage";
 import { Toaster } from "react-hot-toast";
+import StripeCheckoutPage from "./pages/StripeCheckoutPage";
 
 const router = createBrowserRouter([
   {
@@ -91,6 +92,14 @@ const router = createBrowserRouter([
     element: (
       <Protected>
         <UserProfilePage></UserProfilePage>
+      </Protected>
+    ),
+  },
+  {
+    path: '/stripe-checkout/',
+    element: (
+      <Protected>
+         <StripeCheckoutPage></StripeCheckoutPage>
       </Protected>
     ),
   },
