@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router";
 import {
   removeProductFromCartAsync,
+  selectCartLoaded,
   selectItems,
   updateProductQuantityAsync,
 } from "./cartSlice";
@@ -11,6 +12,7 @@ import { discountedPrice } from "../../app/constant";
 
 export default function Cart() {
   const items = useSelector(selectItems);
+  const cartLoaded = useSelector(selectCartLoaded)
   const dispatch = useDispatch();
   const totalAmount =
     items && items.length > 0
@@ -37,7 +39,7 @@ export default function Cart() {
   function removeProductHandler(itemId) {
     dispatch(removeProductFromCartAsync(itemId));
   }
-  if (items && items.length === 0) {
+  if ( items &&  items.length === 0) {
     return (
       <div className="flex flex-col gap-5 items-center min-h-screen justify-center">
         <p className="font-extrabold text-3xl text-gray-900">Empty Cart</p>

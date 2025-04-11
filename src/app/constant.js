@@ -8,5 +8,5 @@ export const CART_API_ENDPOINT = "http://localhost:8080/api/v1/cart"
 export const ORDER_API_ENDPOINT = "http://localhost:8080/api/v1/order"
 
 export function discountedPrice(item){
-    return Math.round(item.price*(1-item.discountPercentage/100),2)
+    return Math.floor(item.price*(1-item.discountPercentage/100),2)
 }

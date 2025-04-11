@@ -50,8 +50,8 @@ export default function Navbar({ children }) {
                     <Link to="/">
                       <img
                         alt="Your Company"
-                        src="https://tailwindui.com/plus/img/logos/mark.svg?color=indigo&shade=500"
-                        className="size-8"
+                        src="/ecommercelogo.png"
+                        className="size-12 border border-white rounded-full "
                       />
                     </Link>
                   </div>

@@ -39,9 +39,37 @@ export function fetchUser(loginInfo) {
       
   });
 }
+export function checkUser() {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const response = await fetch( `${AUTH_API_ENDPOINT}/check`);
+      if (response.ok) {
+        const data = await response.json();
+        resolve({data})
+      } else {
+        const error = await response.json();
+        reject(error)
+      }
+    } catch (error) {
+      reject(error)
+    }
+      
+  });
+}
 
 export function logOut() {
-  return new Promise(async(resolve)=>{
-    resolve({data: "success"});
+  return new Promise(async(resolve, reject)=>{
+    try {
+      const response = await fetch( `${AUTH_API_ENDPOINT}/logout`);
+      if (response.ok) {
+        const data = await response.json();
+        resolve({data})
+      } else {
+        const error = await response.json();
+        reject(error)
+      }
+    } catch (error) {
+      reject(error)
+    }
   })
 }

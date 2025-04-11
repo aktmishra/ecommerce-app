@@ -11,6 +11,7 @@ import toast from "react-hot-toast";
 const initialState = {
   items: [],
   status: "idle",
+  cartLoaded : false
 };
 
 export const addToCartAsync = createAsyncThunk(
@@ -87,6 +88,11 @@ export const cartSlice = createSlice({
       .addCase(fetchCartItemsByUserIdAsync.fulfilled, (state, action) => {
         state.status = "idle";
         state.items = action.payload;
+        state.cartLoaded = true;
+      })
+      .addCase(fetchCartItemsByUserIdAsync.rejected, (state, action) => {
+        state.status = "idle";
+        state.cartLoaded = true;
       })
       .addCase(updateProductQuantityAsync.pending, (state, action) => {
         state.status = "loading";
@@ -123,5 +129,6 @@ export const cartSlice = createSlice({
 export const {} = cartSlice.actions;
 
 export const selectItems = (state) => state.cart.items;
+export const selectCartLoaded = (state) => state.cart.cartLoaded;
 
 export default cartSlice.reducer;
